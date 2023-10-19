@@ -9,7 +9,10 @@ class CommentResource extends JsonResource
 {
     public function toArray($request)
     {
-
+        $images = [];
+        foreach ($this->image as $image) {
+            $images[] = URL::to($image->url);
+        }
 
         return [
             'id' => $this->id,
@@ -19,7 +22,7 @@ class CommentResource extends JsonResource
             'parent' => $this->commentable,
             'comments' => CommentsResource::collection($this->comments),
             'user' => $this->user_id,
-            'image' => $this->image ? URL::to($this->image->url) : null
+            'image' => ImageResource::collection($this->image)
         ];
     }
 }

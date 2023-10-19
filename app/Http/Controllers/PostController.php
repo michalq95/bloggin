@@ -45,15 +45,17 @@ class PostController extends Controller
         return PostsResource::collection($posts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
         $post = Post::create($data);
         $tagIds = $post->addTags(request()->input('tags'));
         $post->tags()->sync($tagIds);
+        if ($post && $request->hasFile('image')) {
+            foreach ($request->file('image') as $image)
+                $post->addImage($image);
+        }
         return new PostResource($post);
     }
 
@@ -74,6 +76,10 @@ class PostController extends Controller
         $data = $request->validated();
         $post->update($data);
         $post->tags()->sync($post->addTags(request()->input('tags')));
+        if ($post && $request->hasFile('image')) {
+            foreach ($request->file('image') as $image)
+                $post->addImage($image);
+        }
         return new PostResource($post);
     }
 

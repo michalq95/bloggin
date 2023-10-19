@@ -18,7 +18,7 @@ class PostResource extends JsonResource
             'tags' => $this->tags->pluck("name"),
             'comments' => CommentsResource::collection($this->comments),
             'user' => $this->user_id,
-            'image' => $this->image ? URL::to($this->image->url) : null
+            'image' => ImageResource::collection($this->image)
 
         ];
     }

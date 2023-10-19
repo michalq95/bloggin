@@ -18,6 +18,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 });
 Route::resource('/post', PostController::class)->only(['index', 'show']);
-// Route::resource('post/{post}/comment/{}', CommentController::class)->only(['index', 'show']);
 Route::post("/register", [AuthController::class, 'register']);
 Route::post("/login", [AuthController::class, 'login']);

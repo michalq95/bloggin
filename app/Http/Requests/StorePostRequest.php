@@ -25,7 +25,9 @@ class StorePostRequest extends FormRequest
             'user_id' => 'exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            "image" => 'nullable|string'
+            "image" => 'nullable',
+            'image.*' => 'file|mimes:jpeg,png,jpg,gif|max:2000',
+
         ];
     }
 }

@@ -18,7 +18,7 @@ class PostsResource extends JsonResource
             'tags' => $this->tags->pluck("name"),
             'comments_count' => $this->comments->count(),
             'user' => $this->user_id,
-            'image' => $this->image ? URL::to($this->image->url) : null
+            'image' => new ImageResource($this->oldestImage)
 
         ];
     }

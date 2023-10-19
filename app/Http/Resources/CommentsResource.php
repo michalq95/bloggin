@@ -19,7 +19,7 @@ class CommentsResource extends JsonResource
             // 'parent' => $this->commentable,
             'comments' => CommentsResource::collection($this->comments),
             'user' => $this->user_id,
-            'image' => $this->image ? URL::to($this->image->url) : null
+            'image' => ImageResource::collection($this->image)
         ];
     }
 }
