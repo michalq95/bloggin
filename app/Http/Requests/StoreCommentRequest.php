@@ -15,11 +15,9 @@ class StoreCommentRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        // dd($this->attributes->get("commentable_type"));
         $this->merge([
             'user_id' => Auth::user()->id,
-            "commentable_type" => $this->attributes->get("commentable_type"),
-            "commentable_id" => $this->attributes->get("commentable_id")
+
         ]);
     }
 

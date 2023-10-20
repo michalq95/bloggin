@@ -8,7 +8,16 @@
             >
                 <router-link :to="{ name: 'Home' }"> Home </router-link>
             </div>
+
             <div class="flex grow"></div>
+            <div class="md:block hidden">
+                <router-link
+                    :to="{ name: 'Blog' }"
+                    class="py-2 px-3 ml-2 hover:bg-indigo-100 rounded"
+                >
+                    Blog
+                </router-link>
+            </div>
             <div
                 v-if="token"
                 class="relative inline-block text-left items-end"
@@ -42,7 +51,9 @@
                 </div>
 
                 <!-- Desktop Links -->
+
                 <div class="hidden md:block text-sm">
+                    <div></div>
                     <div v-if="!token">
                         <router-link
                             :to="{ name: 'Login' }"
@@ -92,6 +103,12 @@
                 class="bg-white px-4 py-4 select-none border-b md:hidden duration-200"
                 v-if="menuIsOpen"
             >
+                <router-link
+                    :to="{ name: 'Blog' }"
+                    class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                >
+                    Blog
+                </router-link>
                 <div v-if="!token">
                     <router-link
                         :to="{ name: 'Login' }"

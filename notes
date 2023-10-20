@@ -1,0 +1,3 @@
+//jak cos nie tak to prawdopodobnie to
+php artisan config:cache --env=testing
+php artisan config:clear
