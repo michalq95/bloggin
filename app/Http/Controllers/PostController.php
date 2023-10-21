@@ -21,10 +21,10 @@ class PostController extends Controller
     {
         $keywords = $request->input('keyword');
         $page = $request->input("page", 1);
-        $query = Post::with(["tags", "comments"]); //->orderBy('created_at', 'desc')->paginate(10)
+        $query = Post::with(["tags", "comments"]);
 
         if ($keywords) {
-            $keywords = explode(" ", $keywords);
+            $keywords = explode(",", $keywords);
             $query->where(function ($query) use ($keywords) {
                 foreach ($keywords as $keyword) {
                     $query->where('title', 'LIKE', "%$keyword%")
@@ -33,15 +33,15 @@ class PostController extends Controller
                         });
                 }
             });
-            $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
         } else if ($page != 1) {
-            $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
         } else {
             $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
-                return $query->orderBy('created_at', 'desc')->paginate(10);
+                return $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
+                // $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
             });
         }
-
         return PostsResource::collection($posts);
     }
 

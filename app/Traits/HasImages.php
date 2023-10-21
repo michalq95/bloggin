@@ -3,12 +3,21 @@
 namespace App\Traits;
 
 use App\Models\Image;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait HasImages
 {
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+    public function latestImage(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable')->latestOfMany();
+    }
+    public function oldestImage(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable')->oldestOfMany();
     }
 
     public function addImage($imageFile)

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import AuthLayout from "../components/AuthLayout.vue";
 import Login from "../views/Login.vue";
 import Blog from "../views/Blog.vue";
+import BlogPost from "../views/BlogPost.vue";
 import Register from "../views/Register.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
@@ -27,6 +28,11 @@ const routes = [
         path: "/blog",
         name: "Blog",
         component: Blog,
+    },
+    {
+        path: "/blog/:id",
+        name: "BlogPost",
+        component: BlogPost,
     },
 ];
 const router = createRouter({

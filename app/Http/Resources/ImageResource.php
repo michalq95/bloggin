@@ -17,9 +17,11 @@ class ImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'url' => URL::to($this->id),
+            'url' => URL::to($this->url),
             'imageable_id' => $this->imageable_id,
             'imageable_type' => $this->imageable_type,
+            'created_at' => $this->created_at->format('Y/m/d'),
+            'updated_at' => $this->updated_at->format('Y/m/d'),
 
         ];
     }

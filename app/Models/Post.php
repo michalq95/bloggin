@@ -54,8 +54,4 @@ class Post extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
-    public function oldestImage(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable')->oldestOfMany();
-    }
 }
