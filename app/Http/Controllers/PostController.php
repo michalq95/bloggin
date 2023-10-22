@@ -34,9 +34,9 @@ class PostController extends Controller
                         });
                 }
             });
-            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
         } else if ($page != 1) {
-            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
         } else {
             $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
                 return $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
@@ -63,7 +63,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
         return new PostResource($post);
     }

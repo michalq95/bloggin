@@ -26,11 +26,12 @@ class BindCommentRoute
         $objStr = 'App\\Models\\' . ucfirst($model);
         $obj = new $objStr;
         $obj = $obj::find($id);
+        // dd($obj);
         if (!$obj) {
             return new JsonResponse('Commentable object not found', 404);
         }
 
-        $request->merge(['commentable_type' => $objStr, 'commentable_id' => $id]);
+        $request->merge(['model' => $model, 'commentable_type' => $objStr, 'commentable_id' => $id, 'object' => $obj]);
         return $next($request);
     }
 }

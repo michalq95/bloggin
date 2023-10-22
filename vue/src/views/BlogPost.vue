@@ -1,8 +1,11 @@
 <template>
     <div v-if="!post">Loading...</div>
-    <div v-else class="max-w-4xl px-10 py-6 bg-white rounded-lg shadow-md">
+    <div
+        v-else
+        class="max-w-4xl px-10 py-6 dark:bg-slate-600 rounded-lg shadow-md"
+    >
         <div class="flex justify-between items-center">
-            <span class="font-light text-gray-600">{{ post.created_at }}</span>
+            <span class="font-light text-gray-800">{{ post.created_at }}</span>
             <div class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded">
                 <button
                     v-for="tag in post.tags"
@@ -15,10 +18,10 @@
             </div>
         </div>
         <div class="mt-2">
-            <h2 class="text-2xl text-gray-700 font-bold">
+            <h2 class="text-2xl text-gray-700 dark:text-gray-300 font-bold">
                 {{ post.title }}
             </h2>
-            <p class="mt-2 text-gray-600">
+            <p class="m-4 text-gray-600 dark:text-gray-300 text-left">
                 {{ post.description }}
             </p>
         </div>
@@ -48,21 +51,26 @@
                 </a>
             </div>
         </div>
-        <div class="rounded-md p-2 dark:bg-sky-900 bg-sky-300">
-            <strong class="text-left text-white">Comments:</strong>
-            <ul>
-                <Comment
-                    v-for="comment in post.comments"
-                    :comment="comment"
-                ></Comment>
-            </ul>
+        <div class="rounded-md p-2 dark:bg-slate-700 bg-sky-300">
+            <strong class="text-left text-black m-3">Comments:</strong>
+            <Comment
+                v-for="comment in post.comments"
+                :comment="comment"
+            ></Comment>
+            <button
+                v-if="post.comments_meta.has_next_page"
+                class="mt-1 focus:ring-indigo-500 w-1/6 py-3 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 dark:bg-slate-800"
+                @click="loadMoreComments"
+            >
+                Load more comments
+            </button>
         </div>
     </div>
 </template>
 <script setup>
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { getPost } from "../service";
+import { getPost, getMoreComments } from "../service";
 import Comment from "../components/Comment.vue";
 const route = useRoute();
 
@@ -73,4 +81,14 @@ onMounted(async () => {
         post.value = data.data;
     }
 });
+
+async function loadMoreComments() {
+    const data = await getMoreComments({
+        model: "post",
+        id: post.value.id,
+        page: post.value.comments_meta.current_page,
+    });
+    post.value.comments = [...post.value.comments, ...data.comments];
+    post.value.comments_meta = data.comments_meta;
+}
 </script>

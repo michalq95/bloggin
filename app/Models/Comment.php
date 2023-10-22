@@ -16,7 +16,7 @@ class Comment extends Model
 
     protected $fillable = ['title', 'description', 'user_id', 'commentable_type', 'commentable_id'];
 
-    protected $with = ['comments'];
+    protected $with = ['comments', 'tags', 'image'];
     public function user()
     {
         return $this->belongsTo(User::class, "user_id");
@@ -38,7 +38,7 @@ class Comment extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable')->with('comments');
     }
     public function image(): MorphMany
     {

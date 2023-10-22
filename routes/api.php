@@ -7,6 +7,9 @@ use App\Http\Middleware\BindCommentRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middleware(BindCommentRoute::class);
+
+Route::resource('/post', PostController::class)->only(['index', 'show']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);
@@ -17,6 +20,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
 });
-Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::post("/register", [AuthController::class, 'register']);
 Route::post("/login", [AuthController::class, 'login']);

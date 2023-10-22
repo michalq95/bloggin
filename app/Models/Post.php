@@ -16,7 +16,7 @@ class Post extends Model
     use HasFactory, HasImages, HasTags, SoftDeletes;
     protected $fillable = ['title', 'description', 'user_id'];
 
-    protected $with = ['comments'];
+    protected $with = ['comments', 'tags', 'image'];
 
 
     protected static function booted()
