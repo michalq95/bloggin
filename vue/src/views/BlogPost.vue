@@ -48,12 +48,22 @@
                 </a>
             </div>
         </div>
+        <div class="rounded-md p-2 dark:bg-sky-900 bg-sky-300">
+            <strong class="text-left text-white">Comments:</strong>
+            <ul>
+                <Comment
+                    v-for="comment in post.comments"
+                    :comment="comment"
+                ></Comment>
+            </ul>
+        </div>
     </div>
 </template>
 <script setup>
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getPost } from "../service";
+import Comment from "../components/Comment.vue";
 const route = useRoute();
 
 const post = ref(null);

@@ -11,17 +11,17 @@ class CommentPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Comment $comment): bool
+    public function view(?User $user, Comment $comment): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,8 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        //
+        if (!$user->can("create comment")) abort(403);
+        return true;
     }
 
     /**
@@ -37,7 +38,8 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        //
+        if (!($user->can("update comment") || $user->id == $comment->user_id)) abort(403);
+        return true;
     }
 
     /**
@@ -45,7 +47,8 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        //
+        if (!($user->can("update comment") || $user->id == $comment->user_id)) abort(403);
+        return true;
     }
 
     /**
@@ -53,7 +56,8 @@ class CommentPolicy
      */
     public function restore(User $user, Comment $comment): bool
     {
-        //
+        if (!($user->can("update comment"))) abort(403);
+        return true;
     }
 
     /**
@@ -61,6 +65,6 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        //
+        return $user->can("delete comment");
     }
 }

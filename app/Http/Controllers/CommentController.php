@@ -12,7 +12,10 @@ use App\Models\Post;
 
 class CommentController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->authorizeResource(Comment::class, 'comment');
+    }
     public function store(StoreCommentRequest $request)
     {
         $data = $request->validated();

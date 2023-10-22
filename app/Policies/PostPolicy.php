@@ -11,17 +11,17 @@ class PostPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(?User $user, Post $post): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->can("create post");
     }
 
     /**
@@ -37,7 +37,9 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        //
+
+        if (!$user->can("update post")) abort(403);
+        return true;
     }
 
     /**
@@ -45,7 +47,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        //
+        return $user->can("update post");
     }
 
     /**
@@ -53,7 +55,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post): bool
     {
-        //
+        return $user->can("update post");
     }
 
     /**
@@ -61,6 +63,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post): bool
     {
-        //
+        return $user->can("delete post");
     }
 }
