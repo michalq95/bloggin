@@ -53,6 +53,22 @@
         </div>
         <div class="rounded-md p-2 dark:bg-slate-700 bg-sky-300">
             <strong class="text-left text-black m-3">Comments:</strong>
+            <div class="flex justify-between items-center p-2">
+                <button
+                    v-if="isLoggedIn"
+                    class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
+                    @click="replying = !replying"
+                >
+                    Reply
+                </button>
+            </div>
+            <NewComment
+                v-if="replying"
+                @close="replying = false"
+                @newComment="addNewlyAddedComment"
+                :parentId="post.id"
+                :parentType="'post'"
+            ></NewComment>
             <Comment
                 v-for="comment in post.comments"
                 :comment="comment"
@@ -71,10 +87,17 @@
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getPost, getMoreComments } from "../service";
+import store from "../store";
 import Comment from "../components/Comment.vue";
+import NewComment from "../components/NewComment.vue";
+
 const route = useRoute();
 
 const post = ref(null);
+const replying = ref(false);
+
+let isLoggedIn = computed(() => store.getters.isLoggedIn);
+
 onMounted(async () => {
     if (route.params.id) {
         const data = await getPost(route.params.id);
@@ -82,13 +105,25 @@ onMounted(async () => {
     }
 });
 
+const doesCommentExist = (comments, id) => {
+    return comments.some((comment) => comment.id === id);
+};
+
 async function loadMoreComments() {
     const data = await getMoreComments({
         model: "post",
         id: post.value.id,
-        page: post.value.comments_meta.current_page,
+        page: post.value.comments_meta.page + 1,
     });
-    post.value.comments = [...post.value.comments, ...data.comments];
+
+    const filteredComments = data.comments.filter(
+        (comment) => !doesCommentExist(post.value.comments, comment.id)
+    );
+    post.value.comments = [...post.value.comments, ...filteredComments];
     post.value.comments_meta = data.comments_meta;
+}
+
+function addNewlyAddedComment(data) {
+    post.value.comments.unshift({ ...data, parent: undefined });
 }
 </script>

@@ -48,8 +48,8 @@
                 for="file-input"
             >
                 <img
-                    v-if="parent.image"
-                    :src="parent.image"
+                    v-if="image"
+                    :src="image"
                     class="rounded-sm h-12 !w-12 min-w-12 object-cover"
                 />
                 <span
@@ -85,12 +85,12 @@
 import { ref } from "vue";
 
 import { saveComment } from "../service";
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "newComment"]);
 const props = defineProps({
-    parent: Object,
+    parentId: Number,
     parentType: String,
 });
-
+const image = ref(null);
 const newCommentModel = ref({
     title: "",
     description: "",
@@ -98,19 +98,21 @@ const newCommentModel = ref({
 });
 function onImageChoose(ev) {
     newCommentModel.value.image = ev.target.files[0];
-    props.parent.image = URL.createObjectURL(ev.target.files[0]);
+    image.value = URL.createObjectURL(ev.target.files[0]);
 }
 async function newComment() {
     const formData = new FormData();
     for (const field in newCommentModel.value) {
         formData.append(field, newCommentModel.value[field]);
     }
+    formData.append("image[]", newCommentModel.value.image);
     const data = await saveComment({
         model: props.parentType,
-        id: props.parent.id,
+        id: props.parentId,
         formData,
     });
-
+    console.log(data);
+    emit("newComment", data);
     newCommentModel.value = {
         title: "",
         description: "",

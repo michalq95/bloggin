@@ -27,7 +27,7 @@ class UpdateCommentRequest extends FormRequest
 
             'description' => 'nullable|string',
             "image" => 'nullable',
-            'image.*' => 'file|mimes:jpeg,png,jpg,gif|max:2000',
+            'image.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2000',
         ];
     }
 }

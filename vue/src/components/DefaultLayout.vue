@@ -157,6 +157,7 @@ import { useStore } from "vuex";
 
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { logout as logoutService } from "../service";
 
 const menuIsOpen = ref(false);
 
@@ -166,12 +167,12 @@ let isMod = computed(() => store.getters.isMod);
 const user = computed(() => store.state.user.data);
 const token = computed(() => store.state.user.token);
 
-function logout() {
-    store.dispatch("logout").then(() => {
-        router.push({
-            name: "Home",
-        });
-    });
+async function logout() {
+    const data = await logoutService(user);
+    if (data) {
+        store.commit("logout", data.data);
+        router.push({ name: "Home" });
+    }
 }
 </script>
 

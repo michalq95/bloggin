@@ -99,6 +99,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { getPosts } from "../service";
+import store from "../store";
 
 const posts = ref([]);
 const meta = ref({});

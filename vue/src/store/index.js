@@ -13,6 +13,9 @@ const store = createStore({
         isMod(state) {
             return state.user.data.role < 2;
         },
+        isLoggedIn(state) {
+            return state.user.token;
+        },
     },
     actions: {},
     mutations: {
@@ -21,6 +24,19 @@ const store = createStore({
         },
         set404Error: (state, value) => {
             state.error404 = value;
+        },
+        logout: (state) => {
+            state.user.data = {};
+            state.user.token = null;
+            sessionStorage.removeItem("BLOG_TOKEN");
+            sessionStorage.removeItem("BLOG_USER");
+        },
+        setUser: (state, userData) => {
+            state.user.token = userData.token;
+            state.user.data = userData.user;
+            sessionStorage.setItem("BLOG_USER", JSON.stringify(userData.user));
+
+            sessionStorage.setItem("BLOG_TOKEN", userData.token);
         },
     },
     modules: {},

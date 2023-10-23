@@ -108,6 +108,7 @@
 <script setup>
 import store from "../store";
 import { useRouter } from "vue-router";
+import { register as registerService } from "../service";
 
 const router = useRouter();
 const user = {
@@ -117,16 +118,12 @@ const user = {
     password_confirmation: "",
 };
 
-async function register(ev) {
-    ev.preventDefault();
-    store
-        .dispatch("register", user)
-        .then((res) => {
-            router.push({ name: "Home" });
-        })
-        .catch((err) => {
-            store.commit("setError", err.response.data.message);
-        });
+async function register() {
+    const data = await registerService(user);
+    if (data) {
+        store.commit("setUser", data.data);
+        router.push({ name: "Home" });
+    }
 }
 </script>
 <style scoped lang="scss"></style>

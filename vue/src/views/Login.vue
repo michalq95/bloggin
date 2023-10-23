@@ -13,7 +13,7 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" @submit="login">
+        <form class="space-y-6" @submit.prevent="login">
             <div>
                 <label
                     for="email"
@@ -93,6 +93,7 @@
 import store from "../store";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { login as loginService } from "../service";
 
 const router = useRouter();
 const user = {
@@ -101,20 +102,13 @@ const user = {
     remember: false,
 };
 
-let errorMsg = ref("");
-
-function login(ev) {
-    ev.preventDefault();
-    store
-        .dispatch("login", user)
-        .then(() => {
-            router.push({
-                name: "Home",
-            });
-        })
-        .catch((err) => {
-            store.commit("setError", err.response.data.message);
-        });
+async function login() {
+    // ev.preventDefault();
+    const data = await loginService(user);
+    if (data) {
+        store.commit("setUser", data.data);
+        router.push({ name: "Home" });
+    }
 }
 </script>
 <style scoped lang="scss"></style>

@@ -1,6 +1,32 @@
 import axiosClient from "./axios";
 import store from "./store";
 
+export async function login(user) {
+    try {
+        return await axiosClient.post("/login", user);
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function register(user) {
+    try {
+        return await axiosClient.post("/register", user);
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function logout() {
+    console.log("log out function");
+    try {
+        return await axiosClient.post("/logout");
+    } catch (error) {
+        store.commit("setError", error);
+        return null;
+    }
+}
+
 export async function getPosts({ page = 1, keyword = "" } = {}) {
     try {
         const res = await axiosClient.get(

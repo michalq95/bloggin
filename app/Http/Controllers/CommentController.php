@@ -29,9 +29,11 @@ class CommentController extends Controller
         $comment = Comment::create($data);
         $tagIds = $comment->addTags(request()->input('tags'));
         $comment->tags()->sync($tagIds);
+
         if ($comment && $request->hasFile('image')) {
-            foreach ($request->file('image') as $image)
+            foreach ($request->file('image') as $image) {
                 $comment->addImage($image);
+            }
         }
         return new CommentResource($comment);
     }

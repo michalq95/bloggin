@@ -31,7 +31,7 @@ class StoreCommentRequest extends FormRequest
             'commentable_id' => 'required',
             'description' => 'nullable|string',
             "image" => 'nullable',
-            'image.*' => 'file|mimes:jpeg,png,jpg,gif|max:2000',
+            'image.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2000',
         ];
     }
 }
