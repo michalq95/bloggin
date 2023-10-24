@@ -58,9 +58,7 @@
                 </div>
 
                 <div class="mt-2">
-                    <p class="mt-2 text-gray-600">
-                        {{ post.description.slice(0, 100) }}
-                    </p>
+                    <p class="mt-2 text-gray-600" v-html="post.description"></p>
                 </div>
                 <div class="flex justify-between items-center mt-4">
                     <router-link

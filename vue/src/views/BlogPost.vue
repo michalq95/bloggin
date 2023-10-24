@@ -18,12 +18,21 @@
             </div>
         </div>
         <div class="mt-2">
+            <div class="flex">
+                <img
+                    v-if="post.image[0]"
+                    :src="post.image[0].url"
+                    class="w-24 object-cover"
+                />
+                <div class="w-16" v-else></div>
+            </div>
             <h2 class="text-2xl text-gray-700 dark:text-gray-300 font-bold">
                 {{ post.title }}
             </h2>
-            <p class="m-4 text-gray-600 dark:text-gray-300 text-left">
-                {{ post.description }}
-            </p>
+            <p
+                class="m-4 text-gray-600 dark:text-gray-300 text-left"
+                v-html="post.description"
+            ></p>
         </div>
         <div class="flex justify-between items-center mt-4">
             <span class="font-light text-gray-600"

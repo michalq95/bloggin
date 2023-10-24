@@ -23,7 +23,7 @@ class CommentsResource extends JsonResource
                 'model' => $request->model,
             ],
             'user' => new OtherUserResource($this->user),
-            'image' => new ImageResource($this->oldestImage),
+            'image' => new ImageResource($this->latestImage),
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
         ];

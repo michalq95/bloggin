@@ -21,9 +21,10 @@ class UpdateCommentRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             // 'user_id' => 'exists:users,id',
-            'title' => 'required|string|max:255',
+            // 'title' => 'required|string|max:255',
 
             'description' => 'nullable|string',
             "image" => 'nullable',

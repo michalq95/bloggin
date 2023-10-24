@@ -68,3 +68,12 @@ export async function saveComment({ model, id, formData } = {}) {
         return null;
     }
 }
+export async function putComment({ id, formData }) {
+    try {
+        const res = await axiosClient.post(`comment/${id}`, formData);
+        return res.data.data;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
