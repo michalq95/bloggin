@@ -99,6 +99,7 @@ function addNewlyAddedComment(data) {
 }
 
 function alterComment(data) {
+    // props.comment = Object.assign(props.comment, data);
     props.comment.description = data.description;
     props.comment.image = data.image;
     props.comment.updated_at = data.updated_at;

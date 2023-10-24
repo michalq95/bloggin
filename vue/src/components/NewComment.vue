@@ -1,17 +1,20 @@
 <template>
     <div
-        class="justify-between items-center py-3 px-5 shadow-md dark:bg-sky-700"
+        class="justify-between items-center py-3 px-5 shadow-md dark:bg-slate-600"
     >
-        <div>
+        <div class="flex justify-between">
             <button
-                class="p-2 mx-2 bg-blue-500 rounded-2xl"
+                class="flex p-2 mx-2 bg-slate-500 rounded-sm"
                 @click="$emit('close')"
             >
                 X
             </button>
 
-            <button class="p-2 mx-2 bg-blue-500 rounded-2xl" @click="confirm()">
-                Add new comment
+            <button
+                class="flex p-2 mx-2 bg-slate-500 rounded-sm"
+                @click="confirm()"
+            >
+                {{ editing ? "Update comment" : "Add new comment" }}
             </button>
         </div>
 
@@ -33,13 +36,7 @@
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >Your message</label
         >
-        {{ newCommentModel.description }}
-        <!-- <textarea
-            v-model="newCommentModel.description"
-            rows="4"
-            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Write your thoughts here..."
-        ></textarea> -->
+
         <div class="bg-white">
             <QuillEditor
                 theme="snow"
@@ -108,9 +105,9 @@ const newCommentModel = ref({
 
 onMounted(() => {
     if (props.editing && props.editedComment) {
-        newCommentModel.value.title = props.editedComment.title;
-        newCommentModel.value.description = props.editedComment.description;
-        image.value = props.editedComment.image.url;
+        newCommentModel.value = { ...props.editedComment };
+        if (props.editedComment.image)
+            image.value = props.editedComment.image.url;
     }
 });
 
@@ -124,7 +121,8 @@ async function newComment() {
     for (const field in newCommentModel.value) {
         formData.append(field, newCommentModel.value[field]);
     }
-    formData.append("image[]", newCommentModel.value.image);
+    if (newCommentModel.value.image)
+        formData.append("image[]", newCommentModel.value.image);
     const data = await saveComment({
         model: props.parentType,
         id: props.parentId,
@@ -142,7 +140,8 @@ async function newComment() {
 async function editComment() {
     const formData = new FormData();
     formData.append("description", newCommentModel.value.description);
-    formData.append("image[]", newCommentModel.value.image);
+    if (newCommentModel.value.image)
+        formData.append("image[]", newCommentModel.value.image);
     formData.append("_method", "PUT");
     const data = await putComment({
         model: props.parentType,
