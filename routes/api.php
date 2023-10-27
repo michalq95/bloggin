@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TagController;
 use App\Http\Middleware\BindCommentRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middleware(BindCommentRoute::class);
 
 Route::resource('/post', PostController::class)->only(['index', 'show']);
+Route::resource('/tag', TagController::class)->only(['index']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);

@@ -38,6 +38,15 @@ export async function getPosts({ page = 1, keyword = "" } = {}) {
         return null;
     }
 }
+export async function getTags() {
+    try {
+        const res = await axiosClient.get(`/tag`);
+        return res.data;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
 export async function getPost(id) {
     try {
         const res = await axiosClient.get(`post/${id}`);
@@ -62,6 +71,15 @@ export async function getMoreComments({ model, id, page = 2 } = {}) {
 export async function saveComment({ model, id, formData } = {}) {
     try {
         const res = await axiosClient.post(`${model}/${id}/comment`, formData);
+        return res.data.data;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function savePost({ formData } = {}) {
+    try {
+        const res = await axiosClient.post(`post`, formData);
         return res.data.data;
     } catch (error) {
         store.commit("setError", error.response.data.message);

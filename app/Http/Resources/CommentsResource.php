@@ -10,6 +10,7 @@ class CommentsResource extends JsonResource
     public function toArray($request)
     {
         $comments = $this->comments()->orderBy('created_at', 'desc')->simplePaginate(3);
+        // $comments = $this->comments()->with(["tags", "latestImage"])->orderBy('created_at', 'desc')->simplePaginate(3);
 
         return [
             'id' => $this->id,

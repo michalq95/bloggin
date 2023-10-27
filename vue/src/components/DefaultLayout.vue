@@ -163,7 +163,6 @@ const menuIsOpen = ref(false);
 
 const store = useStore();
 const router = useRouter();
-let isMod = computed(() => store.getters.isMod);
 const user = computed(() => store.state.user.data);
 const token = computed(() => store.state.user.token);
 

@@ -16,7 +16,7 @@ class PostsResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'tags' => $this->tags->pluck("name"),
-            'comments_count' => $this->comments->count(),
+            'comments_count' => $this->comments_count,
             'user' => new OtherUserResource($this->user),
             'image' => new ImageResource($this->oldestImage),
             'created_at' => $this->created_at->format('Y/m/d'),

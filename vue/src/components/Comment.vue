@@ -2,11 +2,16 @@
     <div class="rounded-sm ml-4 border-solid border-white border-2">
         <div class="flex justify-between items-center p-2">
             <div class="flex">
-                <img
+                <!-- <img
                     v-if="comment.image"
                     :src="comment.image.url"
                     class="w-20 object-cover"
-                />
+                /> -->
+                <ImageComponent
+                    v-if="comment.image"
+                    :imageUrl="comment.image.url"
+                    :width="80"
+                ></ImageComponent>
                 <div class="w-16" v-else></div>
             </div>
             <div class="flex font-bold text-slate-200">
@@ -68,6 +73,7 @@ import store from "../store";
 
 import { getMoreComments } from "../service";
 import NewComment from "./NewComment.vue";
+import ImageComponent from "./ImageComponent.vue";
 
 const emit = defineEmits(["alterCommentInParent"]);
 

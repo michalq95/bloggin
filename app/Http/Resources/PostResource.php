@@ -9,8 +9,8 @@ class PostResource extends JsonResource
 {
     public function toArray($request)
     {
-        $comments = $this->comments()->orderBy('created_at', 'desc')->simplePaginate(3);
-        // dd($comments->hasMorePages());
+        // $comments = $this->comments()->orderBy('created_at', 'desc')->simplePaginate(3);
+        $comments = $this->comments()->with("comments")->with(["tags", "latestImage"])->orderBy('created_at', 'desc')->simplePaginate(3);
         return [
             'id' => $this->id,
             'title' => $this->title,

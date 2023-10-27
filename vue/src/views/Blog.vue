@@ -2,8 +2,18 @@
     <!-- {{ posts[0] }} -->
     <div v-if="!posts">Loading...</div>
 
-    <div v-else>
-        <div class="my-2 w-11/12">
+    <div v-else class="max-w-4xl m-auto">
+        <div class="flex justify-end">
+            <button class="text-slate-100 bg-slate-700">
+                <router-link
+                    v-if="$store.getters.getPermissions.includes('create post')"
+                    :to="{ name: 'NewBlogpost' }"
+                >
+                    Create Post
+                </router-link>
+            </button>
+        </div>
+        <div class="my-2">
             <label for="search" class="block text-sm font-medium text-gray-500"
                 >Search</label
             >
@@ -25,7 +35,7 @@
             </button>
         </div>
         <div v-for="post in posts">
-            <div class="max-w-4xl px-10 py-6 bg-white rounded-lg shadow-md">
+            <div class="px-10 py-6 bg-white rounded-lg shadow-md">
                 <router-link
                     class="text-2xl text-gray-700 font-bold hover:underline"
                     :to="{ name: 'BlogPost', params: { id: post.id } }"
@@ -61,11 +71,14 @@
                     <p class="mt-2 text-gray-600" v-html="post.description"></p>
                 </div>
                 <div class="flex justify-between items-center mt-4">
-                    <router-link
-                        class="text-blue-500 hover:underline"
-                        :to="{ name: 'BlogPost', params: { id: post.id } }"
-                        >Read more</router-link
-                    >
+                    <div>
+                        <router-link
+                            class="text-blue-500 hover:underline"
+                            :to="{ name: 'BlogPost', params: { id: post.id } }"
+                            >Read more &rarr;
+                        </router-link>
+                        <div>{{ post.comments_count }} discussions</div>
+                    </div>
                     <div class="flex items-center">
                         <img
                             v-if="post.user.image"

@@ -19,11 +19,16 @@
         </div>
         <div class="mt-2">
             <div class="flex">
-                <img
+                <!-- <img
                     v-if="post.image[0]"
                     :src="post.image[0].url"
                     class="w-24 object-cover"
-                />
+                /> -->
+                <ImageComponent
+                    v-if="post.image[0]"
+                    :imageUrl="post.image[0].url"
+                    :width="96"
+                ></ImageComponent>
                 <div class="w-16" v-else></div>
             </div>
             <h2 class="text-2xl text-gray-700 dark:text-gray-300 font-bold">
@@ -97,6 +102,7 @@ import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getPost, getMoreComments } from "../service";
 import store from "../store";
+import ImageComponent from "../components/ImageComponent.vue";
 import Comment from "../components/Comment.vue";
 import NewComment from "../components/NewComment.vue";
 

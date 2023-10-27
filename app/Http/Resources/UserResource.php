@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             // "notifications" => $this->unreadNotifications()->orderBy('created_at', 'desc')->take(10)->get(),
             'image' => new ImageResource($this->latestImage),
+            'permissions' => $this->getAllPermissions()->pluck('name')
         ];
     }
 }

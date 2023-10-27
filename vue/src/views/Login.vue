@@ -53,23 +53,7 @@
                     />
                 </div>
             </div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        v-model="user.remember"
-                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label
-                        for="remember-me"
-                        class="ml-2 block text-sm text-gray-900"
-                    >
-                        Remember me
-                    </label>
-                </div>
-            </div>
+
             <div>
                 <button
                     type="submit"
@@ -96,15 +80,14 @@ import { ref } from "vue";
 import { login as loginService } from "../service";
 
 const router = useRouter();
-const user = {
+const user = ref({
     email: "",
     password: "",
-    remember: false,
-};
+});
 
 async function login() {
     // ev.preventDefault();
-    const data = await loginService(user);
+    const data = await loginService(user.value);
     if (data) {
         store.commit("setUser", data.data);
         router.push({ name: "Home" });

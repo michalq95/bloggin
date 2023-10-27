@@ -10,11 +10,11 @@ const store = createStore({
         error: "",
     },
     getters: {
-        isMod(state) {
-            return state.user.data.role < 2;
-        },
         isLoggedIn(state) {
             return state.user.token;
+        },
+        getPermissions(state) {
+            return state.user.data.permissions ?? [];
         },
     },
     actions: {},

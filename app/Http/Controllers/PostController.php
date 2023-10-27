@@ -22,7 +22,7 @@ class PostController extends Controller
     {
         $keywords = $request->input('keyword');
         $page = $request->input("page", 1);
-        $query = Post::with(["tags", "comments"]);
+        $query = Post::with(["tags",  "user", "oldestImage"]);
 
         if ($keywords) {
             $keywords = explode(",", $keywords);
@@ -34,14 +34,14 @@ class PostController extends Controller
                         });
                 }
             });
-            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
         } else if ($page != 1) {
-            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
         } else {
-            $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
-                return $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
-                // $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(1);
-            });
+            // $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
+            // return $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->orderBy('created_at', 'desc')->paginate(10);
+            $posts = $query->selectRaw('*, SUBSTRING(description, 1, 100) as description')->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
+            // });
         }
         return PostsResource::collection($posts);
     }
@@ -50,6 +50,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
+        // dd(request()->input('tags'));
         $post = Post::create($data);
         $tagIds = $post->addTags(request()->input('tags'));
         $post->tags()->sync($tagIds);
