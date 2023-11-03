@@ -50,7 +50,6 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
-        // dd(request()->input('tags'));
         $post = Post::create($data);
         $tagIds = $post->addTags(request()->input('tags'));
         $post->tags()->sync($tagIds);
@@ -61,9 +60,6 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, Post $post)
     {
         return new PostResource($post);

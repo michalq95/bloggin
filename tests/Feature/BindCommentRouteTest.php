@@ -27,7 +27,16 @@ class BindCommentRouteTest extends TestCase
         $post = Mockery::mock('alias:App\Models\Post');
         $post->shouldReceive('find')->with(1)->andReturn(new \stdClass());
 
-        $request->shouldReceive('merge')->with(['commentable_type' => 'App\\Models\\Post', 'commentable_id' => 1]);
+        // $request->shouldReceive('merge')->with(['commentable_type' => 'App\\Models\\Post', 'commentable_id' => 1]);
+        $object = new \stdClass();
+        $request->shouldReceive('merge')->with(
+            [
+                'commentable_type' => 'App\\Models\\Post',
+                'commentable_id' => 1,
+                'model' => 'post',
+                'object' => $object
+            ]
+        );
 
         $closure = function ($request) {
             return new Response();

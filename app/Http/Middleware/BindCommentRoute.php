@@ -26,7 +26,6 @@ class BindCommentRoute
         $objStr = 'App\\Models\\' . ucfirst($model);
         $obj = new $objStr;
         $obj = $obj::find($id);
-        // dd($obj);
         if (!$obj) {
             return new JsonResponse('Commentable object not found', 404);
         }
