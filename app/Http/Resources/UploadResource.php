@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\URL;
 
-class ImageResource extends JsonResource
+class UploadResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,10 +18,8 @@ class ImageResource extends JsonResource
         return [
             'id' => $this->id,
             'url' => URL::to($this->url),
-            'imageable_id' => $this->imageable_id,
-            'imageable_type' => $this->imageable_type,
-            'created_at' => $this->created_at->format('Y/m/d'),
-            'updated_at' => $this->updated_at->format('Y/m/d'),
+            'post_id' => $this->post_id,
+
         ];
     }
 }

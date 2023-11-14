@@ -28,7 +28,6 @@ trait HasImages
 
         $image = new Image(['url' => $path]);
         $this->image()->save($image);
-        //dd($image->url);
         return $image;
     }
 }

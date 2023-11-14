@@ -57,6 +57,9 @@ class PostController extends Controller
             foreach ($request->file('image') as $image)
                 $post->addImage($image);
         }
+        // dd($data);
+        if ($data["uploads"])
+            $post->updateUploads($data["uploads"]);
         return new PostResource($post);
     }
 

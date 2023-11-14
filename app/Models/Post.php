@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasImages;
 use App\Traits\HasTags;
+use App\Traits\HasUploads;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
-    use HasFactory, HasImages, HasTags, SoftDeletes;
+    use HasFactory, HasImages, HasTags, SoftDeletes, HasUploads;
     protected $fillable = ['title', 'description', 'user_id'];
 
     protected $with = ['tags', 'image'];

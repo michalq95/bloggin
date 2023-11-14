@@ -22,6 +22,7 @@ class PostResource extends JsonResource
                 'has_next_page' => $comments->hasMorePages(),
                 'model' => "post",
             ],
+            'uploads' => UploadResource::collection($this->uploads),
             'user' => new OtherUserResource($this->user),
             'image' => ImageResource::collection($this->image),
             'created_at' => $this->created_at->format('Y/m/d'),
