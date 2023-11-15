@@ -174,6 +174,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ])->toArray(),
 
     /*
@@ -188,6 +189,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'ImageIntervention' => Intervention\Image\Facades\Image::class
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

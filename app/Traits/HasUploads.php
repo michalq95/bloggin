@@ -2,7 +2,12 @@
 
 namespace App\Traits;
 
+use App\Jobs\ProcessUpload;
 use App\Models\Uploads;
+use App\Services\UploadProcessing\AudioProcessingStrategy;
+use App\Services\UploadProcessing\ImageProcessingStrategy;
+use App\Services\UploadProcessing\UploadProcessor;
+use App\Services\UploadProcessing\VideoProcessingStrategy;
 
 trait HasUploads
 {
@@ -14,13 +19,23 @@ trait HasUploads
     public function updateUploads($uploads)
     {
         foreach ($uploads as $upload) {
-            // dd($upload);
             $updatedUpload = Uploads::find($upload);
             if (!$updatedUpload->post_id)
                 $updatedUpload->update(['post_id' => $this->id]);
 
-            // dd($updatedUpload);
-            //Queue strategy pattern
+            $processor = new UploadProcessor();
+
+
+            if (str_starts_with($updatedUpload['mimetype'], 'image')) {
+                $processor->setStrategy(new ImageProcessingStrategy());
+                ProcessUpload::dispatch($updatedUpload, $processor);
+            } elseif (str_starts_with($updatedUpload['mimetype'], 'video')) {
+                $processor->setStrategy(new VideoProcessingStrategy());
+                ProcessUpload::dispatch($updatedUpload, $processor);
+            } elseif (str_starts_with($updatedUpload['mimetype'], 'audio')) {
+                $processor->setStrategy(new AudioProcessingStrategy());
+                ProcessUpload::dispatch($updatedUpload, $processor);
+            }
         }
     }
 }

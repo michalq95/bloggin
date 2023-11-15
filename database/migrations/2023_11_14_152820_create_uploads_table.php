@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('uploads', function (Blueprint $table) {
             $table->id();
             $table->string("url", 255);
+            $table->string("mimetype", 30);
             $table->foreignIdFor(User::class, "user_id");
             $table->foreignId('post_id')->nullable()->constrained();
 

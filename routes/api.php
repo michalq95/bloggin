@@ -20,6 +20,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
     Route::resource('/upload', UploadsController::class)->only(['store']);
+    Route::get('/upload/{id}', [UploadsController::class, 'show']);
+
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
