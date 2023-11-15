@@ -20,21 +20,22 @@ trait HasUploads
     {
         foreach ($uploads as $upload) {
             $updatedUpload = Uploads::find($upload);
-            if (!$updatedUpload->post_id)
+            if (!$updatedUpload->post_id) {
                 $updatedUpload->update(['post_id' => $this->id]);
 
-            $processor = new UploadProcessor();
+                $processor = new UploadProcessor();
 
 
-            if (str_starts_with($updatedUpload['mimetype'], 'image')) {
-                $processor->setStrategy(new ImageProcessingStrategy());
-                ProcessUpload::dispatch($updatedUpload, $processor);
-            } elseif (str_starts_with($updatedUpload['mimetype'], 'video')) {
-                $processor->setStrategy(new VideoProcessingStrategy());
-                ProcessUpload::dispatch($updatedUpload, $processor);
-            } elseif (str_starts_with($updatedUpload['mimetype'], 'audio')) {
-                $processor->setStrategy(new AudioProcessingStrategy());
-                ProcessUpload::dispatch($updatedUpload, $processor);
+                if (str_starts_with($updatedUpload['mimetype'], 'image')) {
+                    $processor->setStrategy(new ImageProcessingStrategy());
+                    ProcessUpload::dispatch($updatedUpload, $processor);
+                } elseif (str_starts_with($updatedUpload['mimetype'], 'video')) {
+                    $processor->setStrategy(new VideoProcessingStrategy());
+                    ProcessUpload::dispatch($updatedUpload, $processor);
+                } elseif (str_starts_with($updatedUpload['mimetype'], 'audio')) {
+                    $processor->setStrategy(new AudioProcessingStrategy());
+                    ProcessUpload::dispatch($updatedUpload, $processor);
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ class UploadResource extends JsonResource
             'id' => $this->id,
             'url' => URL::to($this->url),
             'post_id' => $this->post_id,
-            'image' => new ImageResource($this->oldestImage),
+            'image' => ImageResource::collection($this->images()),
 
         ];
     }
