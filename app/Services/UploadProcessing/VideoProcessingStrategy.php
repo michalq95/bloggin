@@ -20,8 +20,8 @@ class VideoProcessingStrategy implements UploadProcessingStrategy
         Log::debug("strategy processing");
 
         $ffmpeg = FFMpeg::create([
-            'ffmpeg.binaries'  => env('BIN_DIR') . env("FFMPEG"),
-            'ffprobe.binaries' => env('BIN_DIR') . env("FFPROBE"),
+            'ffmpeg.binaries'  => env("FFMPEG"),
+            'ffprobe.binaries' => env("FFPROBE"),
         ]);
         $path = env("QUEUE_CONNECTION") == 'sync' ? '../' : '';
         $video = $ffmpeg->open("storage/app/" . $data["url"]);
