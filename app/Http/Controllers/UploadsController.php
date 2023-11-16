@@ -11,10 +11,15 @@ use App\Services\UploadProcessing\ImageProcessingStrategy;
 use App\Services\UploadProcessing\UploadProcessor;
 use App\Services\UploadProcessing\VideoProcessingStrategy;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UploadsController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(Uploads::class, 'uploads');
+    // }
 
     // public function index()
     // {
@@ -34,6 +39,8 @@ class UploadsController extends Controller
                 $upload = Uploads::create([
                     'url' => $path,
                     'mimetype' => $file->getMimeType(),
+                    'extension' => $file->extension(),
+                    'size' => $file->getSize(),
                     'user_id' => $data['user_id']
                 ]);
 
@@ -52,6 +59,7 @@ class UploadsController extends Controller
     // }
     public function show(int $id)
     {
+
         $uploads = Uploads::where('id', $id)->first();
 
         $processor = new UploadProcessor();
@@ -59,11 +67,14 @@ class UploadsController extends Controller
             $processor->setStrategy(new ImageProcessingStrategy());
             ProcessUpload::dispatch($uploads, $processor);
         } elseif (str_starts_with($uploads['mimetype'], 'video')) {
+            Log::debug("strategy set");
             $processor->setStrategy(new VideoProcessingStrategy());
+            Log::debug("strategy dispatching");
             ProcessUpload::dispatch($uploads, $processor);
+            Log::debug("strategy dispatched");
         } elseif (str_starts_with($uploads['mimetype'], 'audio')) {
             $processor->setStrategy(new AudioProcessingStrategy());
-            ProcessUpload::dispatch($uploads, $processor);
+            ProcessUpload::dispatch($uploads, $processor)->onQueue("database");
         }
     }
 

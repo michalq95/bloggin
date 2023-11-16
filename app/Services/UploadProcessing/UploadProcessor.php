@@ -3,6 +3,7 @@
 namespace App\Services\UploadProcessing;
 
 use App\Interfaces\UploadProcessingStrategy;
+use Illuminate\Support\Facades\Log;
 
 class UploadProcessor
 {
@@ -15,7 +16,8 @@ class UploadProcessor
 
     public function process($file)
     {
-
+        Log::debug($file);
+        Log::debug("ddd");
         return $this->strategy->process($file);
     }
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string("url", 255);
             $table->string("mimetype", 30);
+            $table->string("extension", 10)->nullable();
+            $table->unsignedBigInteger("size")->nullable();
             $table->foreignIdFor(User::class, "user_id");
             $table->foreignId('post_id')->nullable()->constrained();
 

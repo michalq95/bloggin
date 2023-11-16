@@ -8,6 +8,7 @@ use App\Services\UploadProcessing\AudioProcessingStrategy;
 use App\Services\UploadProcessing\ImageProcessingStrategy;
 use App\Services\UploadProcessing\UploadProcessor;
 use App\Services\UploadProcessing\VideoProcessingStrategy;
+use Illuminate\Support\Facades\Log;
 
 trait HasUploads
 {
@@ -18,6 +19,7 @@ trait HasUploads
 
     public function updateUploads($uploads)
     {
+        Log::debug("in update Uploads");
         foreach ($uploads as $upload) {
             $updatedUpload = Uploads::find($upload);
             if (!$updatedUpload->post_id) {

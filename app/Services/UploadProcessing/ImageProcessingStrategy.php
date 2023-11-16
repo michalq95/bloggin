@@ -4,6 +4,9 @@ namespace App\Services\UploadProcessing;
 
 use App\Interfaces\UploadProcessingStrategy;
 use App\Models\Image;
+use App\Models\Uploads;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
 class ImageProcessingStrategy implements UploadProcessingStrategy
@@ -11,10 +14,13 @@ class ImageProcessingStrategy implements UploadProcessingStrategy
     public function process($data)
     {
 
-        $img = ImageIntervention::make("../storage/app/" . $data["url"]);
+        $data = Uploads::find($data);
 
+        $path = env("QUEUE_CONNECTION") == 'sync' ? '../' : '';
+        $img = ImageIntervention::make($path . "storage/app/" . $data["url"]);
         $path = new ImageProcessingService($img, $data);
         $path->createMiniature();
+
 
 
 

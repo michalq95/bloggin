@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Uploads;
 use App\Policies\CommentPolicy;
 use App\Policies\PostPolicy;
+use App\Policies\UploadPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Model' => 'App\Policies\ModelPolicy',
         Post::class => PostPolicy::class,
         Comment::class => CommentPolicy::class,
+        Uploads::class => UploadPolicy::class,
     ];
 
     /**

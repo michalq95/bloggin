@@ -17,9 +17,9 @@ class UploadResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'url' => URL::to($this->url),
-            'post_id' => $this->post_id,
-            'image' => ImageResource::collection($this->images()),
+            // 'url' => URL::to($this->url),
+            // 'post_id' => $this->post_id,
+            'image' => new ImageResource($this->latestImage),
 
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Uploads;
 use App\Services\UploadProcessing\UploadProcessor;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessUpload implements ShouldQueue
 {
@@ -25,7 +27,7 @@ class ProcessUpload implements ShouldQueue
 
     public function handle()
     {
-        // Perform processing using the selected strategy
-        $this->strategy->process($this->file);
+        Log::debug($this->file->id);
+        $this->strategy->process($this->file->id);
     }
 }

@@ -24,9 +24,10 @@ class ImageProcessingService
                 $constraint->upsize();
             });
         }
+        $prepath  = env("QUEUE_CONNECTION") == 'sync' ? '' : 'public/';
         $path = 'newimages/' . uniqid() . '.';
         $this->image->extension ?  $path .= $this->image->extension : $path .= 'jpg';
-        $this->image->save($path);
+        $this->image->save($prepath . $path);
         $image = new Image(['url' => $path]);
         $this->data->image()->save($image);
 
