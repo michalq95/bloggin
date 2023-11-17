@@ -34,7 +34,6 @@ class UploadsController extends Controller
         if ($request->hasFile('file')) {
 
             foreach ($data['file'] as $file) {
-                // dd($file);
                 $path = $file->store('local');
                 $upload = Uploads::create([
                     'url' => $path,
@@ -49,14 +48,16 @@ class UploadsController extends Controller
         }
         return new JsonResource($uploadedIds);
     }
+    public function download(Uploads $uploads)
+    {
+        $filePath = $uploads["url"];
+        if (!Storage::disk('local')->exists($filePath)) {
+            abort(404, 'File not found');
+        }
 
+        return Storage::disk('local')->download($filePath);
+    }
 
-    // public function show(Uploads $uploads)
-    // {
-    //     // dd($uploads);
-    //     // $processor = new UploadProcessor();
-
-    // }
     public function show(int $id)
     {
 
@@ -67,11 +68,8 @@ class UploadsController extends Controller
             $processor->setStrategy(new ImageProcessingStrategy());
             ProcessUpload::dispatch($uploads, $processor);
         } elseif (str_starts_with($uploads['mimetype'], 'video')) {
-            Log::debug("strategy set");
             $processor->setStrategy(new VideoProcessingStrategy());
-            Log::debug("strategy dispatching");
             ProcessUpload::dispatch($uploads, $processor);
-            Log::debug("strategy dispatched");
         } elseif (str_starts_with($uploads['mimetype'], 'audio')) {
             $processor->setStrategy(new AudioProcessingStrategy());
             ProcessUpload::dispatch($uploads, $processor)->onQueue("database");

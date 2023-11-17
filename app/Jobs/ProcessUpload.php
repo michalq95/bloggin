@@ -27,7 +27,6 @@ class ProcessUpload implements ShouldQueue
 
     public function handle()
     {
-        Log::debug($this->file->id);
         $this->strategy->process($this->file->id);
     }
 }

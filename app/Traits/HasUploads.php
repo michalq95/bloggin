@@ -19,7 +19,6 @@ trait HasUploads
 
     public function updateUploads($uploads)
     {
-        Log::debug("in update Uploads");
         foreach ($uploads as $upload) {
             $updatedUpload = Uploads::find($upload);
             if (!$updatedUpload->post_id) {

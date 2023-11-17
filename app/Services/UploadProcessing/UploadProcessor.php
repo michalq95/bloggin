@@ -16,8 +16,7 @@ class UploadProcessor
 
     public function process($file)
     {
-        Log::debug($file);
-        Log::debug("ddd");
+
         return $this->strategy->process($file);
     }
 }
