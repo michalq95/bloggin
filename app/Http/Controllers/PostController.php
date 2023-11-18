@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Uploads;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -83,12 +84,23 @@ class PostController extends Controller
             foreach ($request->file('image') as $image)
                 $post->addImage($image);
         }
+        $currentUploadIds = $post->uploads->pluck('id')->toArray();
+        $newUploadIds = $data["uploads"] ?? [];
+        $uploadsToAdd = array_diff($newUploadIds, $currentUploadIds);
+        $uploadsToRemove = array_diff($currentUploadIds, $newUploadIds);
+
+        foreach ($uploadsToRemove as $uploadId) {
+            $upload = Uploads::find($uploadId);
+            $upload->post_id = null;
+            $upload->save();
+        }
+        if ($uploadsToAdd) {
+            $post->updateUploads($uploadsToAdd);
+        }
+
         return new PostResource($post);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post)
     {
         $post->delete();

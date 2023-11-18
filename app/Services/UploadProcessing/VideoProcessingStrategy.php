@@ -31,8 +31,11 @@ class VideoProcessingStrategy implements UploadProcessingStrategy
                 ->format("storage/app/" . $data["url"])
                 ->get('duration');
             Log::debug($duration);
+            Log::debug($duration / 2);
+            $time = TimeCode::fromSeconds(floor($duration / 2));
+            Log::debug($time);
             $video = $ffmpeg->open("storage/app/" . $data["url"]);
-            $frame =  $video->frame(TimeCode::fromSeconds($duration / 2));
+            $frame =  $video->frame($time); //ms->s, frame from half the video
 
             $img = ImageIntervention::make($frame->save(uniqid(), returnBase64: true));
 

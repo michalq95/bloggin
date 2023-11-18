@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 
 class Image extends Model
 {
@@ -21,5 +22,14 @@ class Image extends Model
     {
 
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function deleteImageFile()
+    {
+        if (File::exists($this->url)) {
+            File::delete($this->url);
+            return true;
+        }
+        return false;
     }
 }

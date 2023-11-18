@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Uploads;
 use App\Http\Requests\StoreUploadsRequest;
 use App\Http\Requests\UpdateUploadsRequest;
+use App\Http\Resources\UploadResource;
 use App\Jobs\ProcessUpload;
 use App\Services\UploadProcessing\AudioProcessingStrategy;
 use App\Services\UploadProcessing\ImageProcessingStrategy;
 use App\Services\UploadProcessing\UploadProcessor;
 use App\Services\UploadProcessing\VideoProcessingStrategy;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -21,10 +24,12 @@ class UploadsController extends Controller
     //     $this->authorizeResource(Uploads::class, 'uploads');
     // }
 
-    // public function index()
-    // {
-    //     //
-    // }
+    public function index()
+    {
+        $uploads = Uploads::with(["oldestImage"])->orderBy('created_at', 'desc')->paginate(10);
+
+        return UploadResource::collection($uploads);
+    }
 
 
     public function store(StoreUploadsRequest $request)
@@ -48,7 +53,7 @@ class UploadsController extends Controller
         }
         return new JsonResource($uploadedIds);
     }
-    public function download(Uploads $uploads)
+    public function show(Uploads $uploads)
     {
         $filePath = $uploads["url"];
         if (!Storage::disk('local')->exists($filePath)) {
@@ -58,10 +63,10 @@ class UploadsController extends Controller
         return Storage::disk('local')->download($filePath);
     }
 
-    public function show(int $id)
+    public function test(Uploads $uploads)
     {
 
-        $uploads = Uploads::where('id', $id)->first();
+        // $uploads = Uploads::where('id', $id)->first();
 
         $processor = new UploadProcessor();
         if (str_starts_with($uploads['mimetype'], 'image')) {
@@ -87,6 +92,7 @@ class UploadsController extends Controller
 
     public function destroy(Uploads $uploads)
     {
-        //
+        $uploads->delete();
+        return new JsonResponse(null, 204);
     }
 }

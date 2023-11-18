@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\File;
 
 trait HasImages
 {

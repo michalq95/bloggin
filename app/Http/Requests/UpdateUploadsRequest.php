@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUploadsRequest extends FormRequest
 {
@@ -11,18 +12,19 @@ class UpdateUploadsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => Auth::user()->id,
+        ]);
+    }
     public function rules(): array
     {
         return [
-            //
+            'file.*' => 'file|max:10240',
         ];
     }
 }

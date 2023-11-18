@@ -19,7 +19,6 @@ class StoreUploadsRequest extends FormRequest
     {
         $this->merge([
             'user_id' => Auth::user()->id,
-
         ]);
     }
     public function rules(): array
