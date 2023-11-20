@@ -95,3 +95,25 @@ export async function putComment({ id, formData }) {
         return null;
     }
 }
+export async function downloadUploadedFile(id) {
+    try {
+        const res = await axiosClient.get(`upload/${id}`, {
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+            "download",
+            `file-${id}.${res.data.type.match(/\/([^\/]+)$/)[1]}`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.log(error);
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}

@@ -6,7 +6,10 @@
     >
         <div class="flex justify-between items-center">
             <span class="font-light text-gray-800">{{ post.created_at }}</span>
-            <div class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded">
+            <div
+                v-if="post.tags && post.tags.length > 0"
+                class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
+            >
                 <button
                     v-for="tag in post.tags"
                     :key="tag"
@@ -19,11 +22,6 @@
         </div>
         <div class="mt-2">
             <div class="flex">
-                <!-- <img
-                    v-if="post.image[0]"
-                    :src="post.image[0].url"
-                    class="w-24 object-cover"
-                /> -->
                 <ImageComponent
                     v-if="post.image[0]"
                     :imageUrl="post.image[0].url"
@@ -34,10 +32,40 @@
             <h2 class="text-2xl text-gray-700 dark:text-gray-300 font-bold">
                 {{ post.title }}
             </h2>
-            <p
+
+            <div
                 class="m-4 text-gray-600 dark:text-gray-300 text-left"
                 v-html="post.description"
-            ></p>
+            ></div>
+            <div
+                v-if="post.uploads && post.uploads.length > 0"
+                class="text-left flex flex-col"
+            >
+                Downloads:
+                <div
+                    v-for="upload in post.uploads"
+                    :key="upload.id"
+                    class="flex my-1 cursor-pointer"
+                    @click="downloadFile(upload.id)"
+                >
+                    <img
+                        v-if="upload.image"
+                        :src="upload.image.url"
+                        alt="upload miniature"
+                        class="h-12 w-12 rounded-lg object-cover"
+                    />
+
+                    <img
+                        v-else
+                        class="h-12 w-12 rounded-lg object-cover"
+                        src="../assets/placeholder.jpg"
+                        alt="placeholder_avatar"
+                    />
+                    {{ upload.filename }}
+                    {{ useHumanReadableFileSize(upload.size) }}
+                    <!-- {{ humanReadableFileSize(upload.size) }} -->
+                </div>
+            </div>
         </div>
         <div class="flex justify-between items-center mt-4">
             <span class="font-light text-gray-600"
@@ -100,7 +128,9 @@
 <script setup>
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { getPost, getMoreComments } from "../service";
+import { useHumanReadableFileSize } from "../composables/readableFileSize";
+// import { humanReadableFileSize } from "../helper";
+import { getPost, getMoreComments, downloadUploadedFile } from "../service";
 import store from "../store";
 import ImageComponent from "../components/ImageComponent.vue";
 import Comment from "../components/Comment.vue";
@@ -140,5 +170,9 @@ async function loadMoreComments() {
 
 function addNewlyAddedComment(data) {
     post.value.comments.unshift({ ...data, parent: undefined });
+}
+
+async function downloadFile(fileId) {
+    await downloadUploadedFile(fileId);
 }
 </script>

@@ -98,7 +98,7 @@ class PostController extends Controller
             $post->updateUploads($uploadsToAdd);
         }
 
-        return new PostResource($post);
+        return new PostResource(Post::find($post->id));
     }
 
     public function destroy(Post $post)

@@ -7,7 +7,6 @@ use App\Models\Image;
 use App\Models\Uploads;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
 class ImageProcessingStrategy implements UploadProcessingStrategy

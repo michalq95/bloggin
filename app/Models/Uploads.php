@@ -11,9 +11,9 @@ class Uploads extends Model
 {
     use HasFactory, HasImages;
 
-    protected $fillable = ['url', 'user_id', "mimetype", 'post_id', 'extension', 'size'];
+    protected $fillable = ['url', 'user_id', "mimetype", 'post_id', 'extension', 'size', 'filename'];
 
-    public function image(): MorphMany
+    public function image()
     {
         return $this->morphMany(Image::class, 'imageable');
     }

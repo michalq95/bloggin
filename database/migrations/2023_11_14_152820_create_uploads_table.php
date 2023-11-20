@@ -18,15 +18,14 @@ return new class extends Migration
             $table->string("url", 255);
             $table->string("mimetype", 30);
             $table->string("extension", 10)->nullable();
+            $table->string("filename", 100)->nullable();
             $table->unsignedBigInteger("size")->nullable();
             $table->foreignIdFor(User::class, "user_id");
             $table->foreignId('post_id')->nullable()->constrained();
 
-            // $table->unsignedBigInteger('uploadable_id')->nullable();
-            // $table->string('uploadable_type')->nullable();
-            $table->timestamps();
 
-            // $table->index(['uploadable_id', 'uploadable_type']);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -53,6 +53,7 @@
                             {{ post.created_at }}
                         </div>
                         <div
+                            v-if="post.tags.length > 0"
                             class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
                         >
                             <button

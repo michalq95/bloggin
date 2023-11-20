@@ -1,7 +1,11 @@
 <template>
     <div @click="largeImage = !largeImage">
         <img
-            :style="[largeImage ? { width: '100%' } : { width: `${width}px` }]"
+            :style="[
+                largeImage
+                    ? { 'max-width': '100%' }
+                    : { 'max-width': `${width}px` },
+            ]"
             class="h-48 object-cover md:h-full"
             :src="imageUrl"
             :alt="imageUrl"

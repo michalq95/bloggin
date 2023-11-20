@@ -14,6 +14,7 @@ Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middle
 
 Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::resource('/tag', TagController::class)->only(['index']);
+Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);
@@ -21,9 +22,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
     Route::resource('/upload', UploadsController::class)->only(['store', 'index']);
-    Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::delete('/upload/{uploads}', [UploadsController::class, 'destroy']);
     Route::put('/upload/{uploads}', [UploadsController::class, 'update']);
+    Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::get("/upload/{uploads}/test", [UploadsController::class, 'test']);
 

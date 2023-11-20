@@ -26,6 +26,7 @@ class StoreUploadsRequest extends FormRequest
         return [
             'file.*' => 'file|max:10240',
             'user_id' => 'exists:users,id',
+            'filename' => 'nullable|string|max:100',
         ];
     }
 }

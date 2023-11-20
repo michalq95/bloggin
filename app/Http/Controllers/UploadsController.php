@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadsController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->authorizeResource(Uploads::class, 'uploads');
-    // }
+    public function __construct()
+    {
+        $this->authorizeResource(Uploads::class, 'uploads');
+    }
 
     public function index()
     {
@@ -59,8 +59,11 @@ class UploadsController extends Controller
         if (!Storage::disk('local')->exists($filePath)) {
             abort(404, 'File not found');
         }
+        $headers = [
+            'extension' => $uploads->extension
+        ];
 
-        return Storage::disk('local')->download($filePath);
+        return Storage::disk('local')->download($filePath, headers: $headers);
     }
 
     public function test(Uploads $uploads)
