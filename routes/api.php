@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
@@ -15,6 +16,9 @@ Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middle
 Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::resource('/tag', TagController::class)->only(['index']);
 Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
+Route::get('/donation', [DonationController::class, 'index']);
+Route::post('/donation/checkout', [DonationController::class, 'checkout']);
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);
