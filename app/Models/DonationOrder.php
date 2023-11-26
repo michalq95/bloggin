@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DonationOrder extends Model
 {
     use HasFactory;
-    protected $fillable = ['token', 'user_id', 'price', 'status'];
+    protected $fillable = ['user_id', 'price', 'status', 'piid'];
 }

@@ -42,30 +42,74 @@ class DonationController extends Controller
         } catch (\Exception $e) {
             abort(400);
         }
-        $token = Uuid::uuid7()->toString();
+
+        // $token = Uuid::uuid7()->toString();
         DonationOrder::create([
             "status" => 'pending',
-            "token" => $token,
+            "piid" => $paymentIntent->id,
+            // "token" => $token,
             "user_id" => $user_id,
             "price" => $donation->price,
         ]);
 
         return [
-            'token' => $token,
+            // 'token' => $token,
             'client_secret' => $paymentIntent->client_secret
         ];
     }
 
-    public function success(Request $request)
+    // public function success(Request $request)
+    // {
+    //     try {
+    //         $donation = DonationOrder::firstWhere('token', $request->token);
+    //         $donation->status = 'success';
+    //         $donation->save();
+    //     } catch (Exception $e) {
+    //         Log::error($e);
+    //     }
+
+    //     return new JsonResponse('Thank you for your tip!', 200);
+    // }
+
+    public function webhook(Request $request)
     {
+        $endpointSecret = env("STRIPE_WEBHOOK");
+
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $event = null;
+
         try {
-            $donation = DonationOrder::firstWhere('token', $request->token);
-            $donation->status = 'success';
-            $donation->save();
-        } catch (Exception $e) {
-            Log::error($e);
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sig_header,
+                $endpointSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            http_response_code(400);
+            echo json_encode(['Error parsing payload: ' => $e->getMessage()]);
+            exit();
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            http_response_code(400);
+            echo json_encode(['Error verifying webhook signature: ' => $e->getMessage()]);
+            exit();
         }
 
-        return new JsonResponse('Thank you for your tip!', 200);
+        if ($request->type == 'payment_intent.succeeded') {
+            $paymentIntent = $event->data->object;
+
+            //should be moved to queue
+            $donation = DonationOrder::firstWhere('piid', $paymentIntent->id);
+            $donation->status = 'success';
+            $donation->save();
+        }
+        // if ($request->type == 'payment_intent.created') {
+        //     $paymentIntent = $event->data->object;
+        // }
+
+
+        return new JsonResponse(['status' => 'success']);
     }
 }

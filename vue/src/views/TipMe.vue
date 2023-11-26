@@ -30,6 +30,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import {
     getDonations,
     initiateDonation,
@@ -37,16 +38,16 @@ import {
     donationFailure,
 } from "../service";
 
+const router = useRouter();
+
 const donations = ref([]);
 const activeDonation = ref(null);
-const token = ref(null);
 const stripe = ref(null);
 const elements = ref(null);
 
 async function setDonation(id) {
     const res = await initiateDonation(id);
     try {
-        token.value = res.data.token;
         stripe.value = window.Stripe(import.meta.env.VITE_STRIPE_PUBKEY);
 
         const options = {
@@ -71,10 +72,8 @@ async function handleSubmit() {
     });
 
     if (error === undefined) {
-        await donationSuccess(token.value);
-        console.log("Thank you for your tip");
+        router.push({ name: "Thanks" });
     } else {
-        // donationFailure(token.value, error);
         console.log("Something went wrong, you were not charged");
     }
 }
