@@ -38,6 +38,47 @@ export async function getPosts({ page = 1, keyword = "" } = {}) {
         return null;
     }
 }
+export async function getDonations() {
+    try {
+        const res = await axiosClient.get(`donation`);
+        return res.data;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function initiateDonation(id) {
+    try {
+        const res = await axiosClient.post(`donation/${id}`);
+        // console.log(res);
+        return res;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function donationSuccess(token) {
+    try {
+        const res = await axiosClient.post(`donation/success`, { token });
+        return res;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+export async function donationFailure(token, error) {
+    try {
+        const res = await axiosClient.post(`donation/failure`, {
+            token,
+            error,
+        });
+        return res;
+    } catch (error) {
+        store.commit("setError", error.response.data.message);
+        return null;
+    }
+}
+
 export async function getTags() {
     try {
         const res = await axiosClient.get(`/tag`);

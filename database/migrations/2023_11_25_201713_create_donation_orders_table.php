@@ -15,10 +15,12 @@ return new class extends Migration
         Schema::create('donation_orders', function (Blueprint $table) {
             $table->id();
             $table->string('status');
-            $table->string('session_id');
+            $table->string('token');
             $table->foreignId('user_id')->nullable()->constrained();
-            $table->decimal('total_price', 6, 2)->nullable();
+            $table->decimal('price', 6)->nullable();
             $table->timestamps();
+
+            $table->index(['token']);
         });
     }
 

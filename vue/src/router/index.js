@@ -6,6 +6,7 @@ import BlogPost from "../views/BlogPost.vue";
 import Register from "../views/Register.vue";
 import NewBlogPost from "../views/NewBlogPost.vue";
 import NotAuthorized from "../views/NotAuthorized.vue";
+import TipMe from "../views/TipMe.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
 
@@ -40,6 +41,11 @@ const routes = [
         path: "/401",
         name: "NotAuthorized",
         component: NotAuthorized,
+    },
+    {
+        path: "/tips",
+        name: "TipMe",
+        component: TipMe,
     },
     {
         path: "/newblogpost",

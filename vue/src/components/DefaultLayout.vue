@@ -17,6 +17,12 @@
                 >
                     Blog
                 </router-link>
+                <router-link
+                    :to="{ name: 'TipMe' }"
+                    class="py-2 px-3 ml-2 hover:bg-indigo-100 rounded"
+                >
+                    Tip Me
+                </router-link>
             </div>
             <div
                 v-if="token"
@@ -108,6 +114,12 @@
                     class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
                 >
                     Blog
+                </router-link>
+                <router-link
+                    :to="{ name: 'TipMe' }"
+                    class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                >
+                    Tip Me
                 </router-link>
                 <div v-if="!token">
                     <router-link

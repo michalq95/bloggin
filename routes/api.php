@@ -17,7 +17,11 @@ Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::resource('/tag', TagController::class)->only(['index']);
 Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
 Route::get('/donation', [DonationController::class, 'index']);
-Route::post('/donation/checkout', [DonationController::class, 'checkout']);
+Route::post('/donation/success', [DonationController::class, 'success']);
+Route::post('/donation/failure', [DonationController::class, 'failure']);
+Route::middleware('guard')->group(function () {
+    Route::post('/donation/{donation}', [DonationController::class, 'checkout']);
+});
 
 
 Route::middleware(['auth:sanctum'])->group(function () {

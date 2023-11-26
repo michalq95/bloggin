@@ -1,5 +1,4 @@
 <template>
-    <!-- {{ posts[0] }} -->
     <div v-if="!posts">Loading...</div>
 
     <div v-else class="max-w-4xl m-auto">
