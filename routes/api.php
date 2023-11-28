@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PremiumMembershipController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Middleware\BindCommentRoute;
@@ -35,6 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::get("/upload/{uploads}/test", [UploadsController::class, 'test']);
+    Route::resource("/premium", PremiumMembershipController::class)->only(['store']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();

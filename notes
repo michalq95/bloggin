@@ -1,6 +1,9 @@
-//jak cos nie tak to prawdopodobnie to
 php artisan config:cache --env=testing
 php artisan config:clear
 
 
 php artisan test --filter=PostControllerTest
+
+stripe listen --forward-to localhost:8081/api/webhook
+
+php artisan db:seed --class=DonationSeeder

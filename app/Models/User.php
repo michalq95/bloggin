@@ -54,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function activePremiumMembership(): PremiumMembership|null
+    {
+        return $this->hasMany(PremiumMembership::class)
+            ->where('active', true)->orderBy('expiration_date', 'desc')->first();
+    }
 }

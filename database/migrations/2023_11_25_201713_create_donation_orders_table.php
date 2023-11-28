@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Donation;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,7 +19,9 @@ return new class extends Migration
             $table->string('piid');
             // $table->string('token');
             $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignIdFor(Donation::class, "donation_id");
             $table->decimal('price', 6)->nullable();
+
             $table->timestamps();
 
             $table->index(['piid']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Donation;
 use App\Models\DonationOrder;
+use App\Services\ActivatePremiumMembership;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,6 +49,8 @@ class DonationController extends Controller
             "status" => 'pending',
             "piid" => $paymentIntent->id,
             // "token" => $token,
+
+            "donation_id" => $donation->id,
             "user_id" => $user_id,
             "price" => $donation->price,
         ]);
@@ -100,14 +103,17 @@ class DonationController extends Controller
         if ($request->type == 'payment_intent.succeeded') {
             $paymentIntent = $event->data->object;
 
-            //should be moved to queue
             $donation = DonationOrder::firstWhere('piid', $paymentIntent->id);
+
+
+            if ($donation->user_id) {
+                $activator = new ActivatePremiumMembership($donation);
+                $activator->activate();
+            }
             $donation->status = 'success';
             $donation->save();
         }
-        // if ($request->type == 'payment_intent.created') {
-        //     $paymentIntent = $event->data->object;
-        // }
+
 
 
         return new JsonResponse(['status' => 'success']);

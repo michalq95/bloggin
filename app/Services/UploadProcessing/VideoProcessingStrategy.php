@@ -30,10 +30,7 @@ class VideoProcessingStrategy implements UploadProcessingStrategy
             $duration = $ffprobe
                 ->format($path . "storage/app/" .  $data["url"])
                 ->get('duration');
-            Log::debug($duration);
-            Log::debug($duration / 2);
             $time = TimeCode::fromSeconds(floor($duration / 2));
-            Log::debug($time);
             $video = $ffmpeg->open($path . "storage/app/" . $data["url"]);
             $frame =  $video->frame($time); //ms->s, frame from half the video
 
