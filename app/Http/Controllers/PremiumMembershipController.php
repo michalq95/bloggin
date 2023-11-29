@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePremiumMembershipRequest;
+use App\Http\Resources\PremiumResource;
 use App\Models\PremiumMembership;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,9 +13,9 @@ class PremiumMembershipController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return PremiumResource::collection(PremiumMembership::latest()->where('active', 1)->filter(request(['user']))->paginate(5));
     }
 
     public function store(StorePremiumMembershipRequest $request)

@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PremiumMembershipController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UploadsController;
+use App\Http\Middleware\AdminOnlyGuardMiddleware;
 use App\Http\Middleware\BindCommentRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::get("/upload/{uploads}/test", [UploadsController::class, 'test']);
-    Route::resource("/premium", PremiumMembershipController::class)->only(['store']);
+    Route::resource("/premium", PremiumMembershipController::class)->only(['store', 'index'])->middleware(AdminOnlyGuardMiddleware::class);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
