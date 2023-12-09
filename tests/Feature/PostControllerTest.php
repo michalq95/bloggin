@@ -23,6 +23,7 @@ class PostControllerTest extends TestCase
         $this->user->assignRole("admin");
         $this->actingAs($this->user);
     }
+
     public function test_can_obtain_posts(): void
     {
         Post::factory(['title' => 'test title'])->count(1)->create();

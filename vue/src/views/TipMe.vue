@@ -19,9 +19,7 @@
         </div>
     </div>
     <form id="payment-form">
-        <div id="payment-element">
-            <!-- Stripe will create form elements here -->
-        </div>
+        <div id="payment-element"></div>
         <button v-if="stripe" type="submit" @click.prevent="handleSubmit">
             Pay via Stripe
         </button>

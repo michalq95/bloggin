@@ -14,7 +14,10 @@ class HasImagesTest extends TestCase
 {
     use RefreshDatabase;
 
-
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
     public function test_can_add_an_image()
     {
         Storage::fake('public');

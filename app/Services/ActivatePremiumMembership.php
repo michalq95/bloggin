@@ -22,26 +22,29 @@ class ActivatePremiumMembership
     public function activate()
     {
         $donation = Donation::find($this->donationOrder->donation_id);
+        $premium = null;
         if ($donation->name == "small") {
-            PremiumMembership::create([
+            $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
                 'expiration_date' => Carbon::now()->addMonth()
             ]);
         }
         if ($donation->name == "medium") {
-            PremiumMembership::create([
+            $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
                 'expiration_date' => Carbon::now()->addMonths(6)
             ]);
         }
         if ($donation->name == "large") {
-            PremiumMembership::create([
+            $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
                 'expiration_date' => Carbon::now()->addYears(999)
             ]);
         }
+
+        return $premium;
     }
 }

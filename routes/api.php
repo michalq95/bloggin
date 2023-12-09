@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::get("/upload/{uploads}/test", [UploadsController::class, 'test']);
-    Route::resource("/premium", PremiumMembershipController::class)->only(['store', 'index'])->middleware(AdminOnlyGuardMiddleware::class);
+    Route::resource("/premium", PremiumMembershipController::class)->middleware(AdminOnlyGuardMiddleware::class);
 
     Route::get('/user', function (Request $request) {
         return $request->user();

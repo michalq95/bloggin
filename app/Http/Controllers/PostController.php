@@ -60,7 +60,7 @@ class PostController extends Controller
                 $post->addImage($image);
         }
 
-        if ($data["uploads"]) {
+        if (isset($data["uploads"])) {
             $post->updateUploads($data["uploads"]);
         }
         return new PostResource($post);

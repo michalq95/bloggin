@@ -3,16 +3,21 @@
 namespace Tests\Feature;
 
 use App\Http\Middleware\BindCommentRoute;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class BindCommentRouteTest extends TestCase
 {
 
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
     public function tearDown(): void
     {
         Mockery::close();
@@ -24,7 +29,9 @@ class BindCommentRouteTest extends TestCase
         $request->shouldReceive('route')->with('id')->andReturn(1);
         $request->shouldReceive('route')->with('model')->andReturn('post');
 
-        $post = Mockery::mock('alias:App\Models\Post');
+        // $post = Mockery::mock('alias:App\Models\Post');
+        $post = Mockery::mock(Post::class);
+
         $post->shouldReceive('find')->with(1)->andReturn(new \stdClass());
 
         // $request->shouldReceive('merge')->with(['commentable_type' => 'App\\Models\\Post', 'commentable_id' => 1]);
@@ -44,8 +51,7 @@ class BindCommentRouteTest extends TestCase
 
         $middleware = new BindCommentRoute();
         $response = $middleware->handle($request, $closure);
-
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
     }
 
     public function testInvalidModel()
@@ -71,7 +77,8 @@ class BindCommentRouteTest extends TestCase
         $request->shouldReceive('route')->with('id')->andReturn(1);
         $request->shouldReceive('route')->with('model')->andReturn('post');
 
-        $post = Mockery::mock('alias:App\Models\Post');
+        // $post = Mockery::mock('alias:App\Models\Post');
+        $post = Mockery::mock(Post::class);
         $post->shouldReceive('find')->with(1)->andReturn(null);
 
         $closure = function ($request) {

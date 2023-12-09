@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePremiumMembershipRequest;
 use App\Http\Resources\PremiumResource;
 use App\Models\PremiumMembership;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,24 +29,27 @@ class PremiumMembershipController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PremiumMembership $premiumMembership)
     {
-        //
+        return new PremiumResource($premiumMembership);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StorePremiumMembershipRequest $request, PremiumMembership $premiumMembership)
     {
-        //
+        $data = $request->validated();
+        $premiumMembership->update($data);
+        return new PremiumResource($premiumMembership);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PremiumMembership $premiumMembership)
     {
-        //
+        $premiumMembership->delete();
+        return new JsonResponse(null, 204);
     }
 }

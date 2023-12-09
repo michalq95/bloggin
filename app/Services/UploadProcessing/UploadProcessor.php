@@ -11,11 +11,13 @@ class UploadProcessor
 
     public function setStrategy(UploadProcessingStrategy $strategy)
     {
+
         $this->strategy = $strategy;
     }
 
     public function process($file)
     {
+
 
         return $this->strategy->process($file);
     }

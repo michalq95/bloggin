@@ -34,6 +34,8 @@ class UploadsController extends Controller
 
     public function store(StoreUploadsRequest $request)
     {
+
+
         $data = $request->validated();
         $uploadedIds = [];
         if ($request->hasFile('file')) {

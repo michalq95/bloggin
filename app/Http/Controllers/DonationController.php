@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use Stripe\Checkout\Session;
@@ -19,7 +20,11 @@ class DonationController extends Controller
 {
     public function index(Request $request)
     {
-        $donations = Donation::all();
+        // $donations = Donation::all();
+        $donations = Cache::remember('donations', 60 * 60 * 24, function () {
+            return Donation::all();
+        });
+
         return new JsonResource($donations);
     }
 
@@ -48,7 +53,6 @@ class DonationController extends Controller
         DonationOrder::create([
             "status" => 'pending',
             "piid" => $paymentIntent->id,
-            // "token" => $token,
 
             "donation_id" => $donation->id,
             "user_id" => $user_id,
@@ -56,23 +60,10 @@ class DonationController extends Controller
         ]);
 
         return [
-            // 'token' => $token,
             'client_secret' => $paymentIntent->client_secret
         ];
     }
 
-    // public function success(Request $request)
-    // {
-    //     try {
-    //         $donation = DonationOrder::firstWhere('token', $request->token);
-    //         $donation->status = 'success';
-    //         $donation->save();
-    //     } catch (Exception $e) {
-    //         Log::error($e);
-    //     }
-
-    //     return new JsonResponse('Thank you for your tip!', 200);
-    // }
 
     public function webhook(Request $request)
     {

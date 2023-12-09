@@ -32,6 +32,7 @@ class CommentControllerTest extends TestCase
 
     public function test_can_obtain_comments(): void
     {
+
         $comment = Comment::factory(['title' => 'test title', 'commentable_id' => $this->postId])->count(1)->create();
         $commentable_id = $comment[0]->commentable_id;
 

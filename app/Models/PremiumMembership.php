@@ -4,12 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class PremiumMembership extends Model
 {
     use HasFactory;
 
     protected $fillable = ["user_id", 'active', 'expiration_date'];
+
+    protected static function booted()
+    {
+        static::created((function () {
+            Cache::forget("donations");
+        }));
+
+        static::updated((function () {
+            Cache::forget("donations");
+        }));
+
+        static::deleted((function () {
+            Cache::forget("donations");
+        }));
+
+        parent::boot();
+    }
 
     public function scopeFilter($query, array $filters)
     {
