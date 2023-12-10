@@ -5,20 +5,16 @@ use App\Models\DonationOrder;
 use App\Models\PremiumMembership;
 use App\Services\ActivatePremiumMembership;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Mockery as m;
 use Tests\TestCase;
 
 class ActivatePremiumMembershipTest extends TestCase
 {
-    use DatabaseTransactions;
 
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->artisan('migrate');
     }
     public function tearDown(): void
     {
@@ -27,16 +23,18 @@ class ActivatePremiumMembershipTest extends TestCase
 
     public function testActivateSmallDonation()
     {
-        $donationOrder = m::mock("alias:" . DonationOrder::class);
+        $donationOrder = m::mock(DonationOrder::class);
+        $donationOrder->shouldReceive('setAttribute')->with('donation_id', 1);
+        $donationOrder->shouldReceive('getAttribute')->with('donation_id')->andReturn(1);
+        $donationOrder->shouldReceive('setAttribute')->with('user_id', 123);
+        $donationOrder->shouldReceive('getAttribute')->with('user_id')->andReturn(123);
 
-        $donationOrder->donation_id = 1;
-        $donationOrder->user_id = 123;
-
-        $donation = m::mock("alias:" . Donation::class);
-        $donation->shouldReceive('find')->with($donationOrder->donation_id)->andReturnSelf();
-        $donation->name = 'small';
+        $donation = m::mock(Donation::class);
+        $donation->shouldReceive('setAttribute')->with('name', 'small');
+        $donation->shouldReceive('getAttribute')->with('name')->andReturn('small');
 
         $carbonNow = m::mock(Carbon::class);
+        $expirationDate = Carbon::now()->addMonth();
         $carbonNow->shouldReceive('addMonth')->andReturn('expiration_date');
 
         $premiumMembership = m::mock(PremiumMembership::class);
@@ -46,10 +44,14 @@ class ActivatePremiumMembershipTest extends TestCase
             'expiration_date' => 'expiration_date',
         ])->andReturnSelf();
 
-        $activatePremiumMembership = new ActivatePremiumMembership($donationOrder);
+        $activatePremiumMembership = new ActivatePremiumMembership($donationOrder, $donation);
 
         $result = $activatePremiumMembership->activate();
-
         $this->assertInstanceOf(PremiumMembership::class, $result);
+        $this->assertEquals(123, $result->user_id);
+        $this->assertEquals(true, $result->active);
+        $this->assertGreaterThanOrEqual($expirationDate->subSeconds(10), $result->expiration_date);
+        $this->assertLessThanOrEqual($result->expiration_date, $expirationDate->addSeconds(10));
+        // $this->assertSame($result->expiration_date, $expectedExpirationDate);
     }
 }

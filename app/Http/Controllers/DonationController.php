@@ -98,7 +98,8 @@ class DonationController extends Controller
 
 
             if ($donation->user_id) {
-                $activator = new ActivatePremiumMembership($donation);
+                $donationmodel = Donation::find($donation->donation_id);
+                $activator = new ActivatePremiumMembership($donation, $donationmodel);
                 $activator->activate();
             }
             $donation->status = 'success';

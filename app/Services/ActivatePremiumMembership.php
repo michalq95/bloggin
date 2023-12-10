@@ -14,30 +14,31 @@ class ActivatePremiumMembership
 {
 
     private $donationOrder;
-    public function __construct(DonationOrder $donationOrder)
+    private $donation;
+    public function __construct(DonationOrder $donationOrder, Donation $donation)
     {
         $this->donationOrder = $donationOrder;
+        $this->donation = $donation;
     }
 
     public function activate()
     {
-        $donation = Donation::find($this->donationOrder->donation_id);
         $premium = null;
-        if ($donation->name == "small") {
+        if ($this->donation->name == "small") {
             $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
                 'expiration_date' => Carbon::now()->addMonth()
             ]);
         }
-        if ($donation->name == "medium") {
+        if ($this->donation->name == "medium") {
             $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
                 'expiration_date' => Carbon::now()->addMonths(6)
             ]);
         }
-        if ($donation->name == "large") {
+        if ($this->donation->name == "large") {
             $premium = PremiumMembership::create([
                 'user_id' => $this->donationOrder->user_id,
                 'active' => true,
