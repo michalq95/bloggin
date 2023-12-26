@@ -21,9 +21,13 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         // $donations = Donation::all();
-        $donations = Cache::remember('donations', 60 * 60 * 24, function () {
-            return Donation::all();
-        });
+        $donations = Cache::remember(
+            'donations',
+            60 * 60 * 24,
+            function () {
+                return Donation::all();
+            }
+        );
 
         return new JsonResource($donations);
     }
@@ -38,26 +42,30 @@ class DonationController extends Controller
         }
 
         try {
-            $paymentIntent  = PaymentIntent::create([
-                'amount' => $donation->price * 100,
-                'currency' => 'pln',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                ],
-            ]);
+            $paymentIntent  = PaymentIntent::create(
+                [
+                    'amount' => $donation->price * 100,
+                    'currency' => 'pln',
+                    'automatic_payment_methods' => [
+                        'enabled' => true,
+                    ],
+                ]
+            );
         } catch (\Exception $e) {
             abort(400);
         }
 
         // $token = Uuid::uuid7()->toString();
-        DonationOrder::create([
-            "status" => 'pending',
-            "piid" => $paymentIntent->id,
+        DonationOrder::create(
+            [
+                "status" => 'pending',
+                "piid" => $paymentIntent->id,
 
-            "donation_id" => $donation->id,
-            "user_id" => $user_id,
-            "price" => $donation->price,
-        ]);
+                "donation_id" => $donation->id,
+                "user_id" => $user_id,
+                "price" => $donation->price,
+            ]
+        );
 
         return [
             'client_secret' => $paymentIntent->client_secret

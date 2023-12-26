@@ -1,7 +1,7 @@
 <template>
     <div v-if="!posts">Loading...</div>
 
-    <div v-else class="max-w-4xl m-auto">
+    <div v-else class="max-w-5xl m-auto">
         <div class="flex justify-end">
             <button class="text-slate-100 bg-slate-700">
                 <router-link
@@ -77,7 +77,7 @@
                             :to="{ name: 'BlogPost', params: { id: post.id } }"
                             >Read more &rarr;
                         </router-link>
-                        <div>{{ post.comments_count }} discussions</div>
+                        <div>{{ post.comments_count }} replies</div>
                     </div>
                     <div class="flex items-center">
                         <img

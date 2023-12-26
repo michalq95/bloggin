@@ -16,6 +16,7 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'tags' => $this->tags->pluck("name"),
+            'content' => ContentResource::collection($this->content),
             'comments' => CommentsResource::collection($comments),
             'comments_meta' => [
                 'page' => $comments->currentPage(),

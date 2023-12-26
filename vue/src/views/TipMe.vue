@@ -1,6 +1,6 @@
 <template>
     <div v-if="!donations">Loading...</div>
-    <div class="max-w-4xl m-auto flex gap-x-4 justify-center" v-else>
+    <div class="max-w-5xl m-auto flex gap-x-4 justify-center" v-else>
         <div
             v-for="donation in donations"
             :class="

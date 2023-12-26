@@ -7,12 +7,12 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Content;
 use App\Models\Uploads;
+use App\Services\UploadProcessing\UpdateUploadsInPostService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+
 
 class PostController extends Controller
 {
@@ -53,15 +53,35 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $post = Post::create($data);
+
+        foreach ($data["content"] as $index => $content) {
+            if (!is_string($content) && Uploads::find($content)) {
+                $newContent = Content::create([
+                    'uploads_id' => $content,
+                    'post_id' => $post->id,
+                    'order' => $index
+                ]);
+            }
+            if (is_string($content)) {
+                $newContent = Content::create([
+                    'text' => $content,
+                    'post_id' => $post->id,
+                    'order' => $index
+                ]);
+            }
+        }
+
+
         $tagIds = $post->addTags(request()->input('tags'));
         $post->tags()->sync($tagIds);
+
         if ($post && $request->hasFile('image')) {
             foreach ($request->file('image') as $image)
                 $post->addImage($image);
         }
 
         if (isset($data["uploads"])) {
-            $post->updateUploads($data["uploads"]);
+            $post->addUploads($data["uploads"]);
         }
         return new PostResource($post);
     }
@@ -75,7 +95,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post, UpdateUploadsInPostService $uploadService)
     {
         $data = $request->validated();
         $post->update($data);
@@ -84,20 +104,8 @@ class PostController extends Controller
             foreach ($request->file('image') as $image)
                 $post->addImage($image);
         }
-        $currentUploadIds = $post->uploads->pluck('id')->toArray();
-        $newUploadIds = $data["uploads"] ?? [];
-        $uploadsToAdd = array_diff($newUploadIds, $currentUploadIds);
-        $uploadsToRemove = array_diff($currentUploadIds, $newUploadIds);
 
-        foreach ($uploadsToRemove as $uploadId) {
-            $upload = Uploads::find($uploadId);
-            $upload->post_id = null;
-            $upload->save();
-        }
-        if ($uploadsToAdd) {
-            $post->updateUploads($uploadsToAdd);
-        }
-
+        $uploadService->updateUploads($post, $data["uploads"] ?? [], $post->uploads->pluck('id')->toArray());
         return new PostResource(Post::find($post->id));
     }
 

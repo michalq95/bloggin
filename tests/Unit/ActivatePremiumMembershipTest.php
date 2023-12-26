@@ -52,6 +52,5 @@ class ActivatePremiumMembershipTest extends TestCase
         $this->assertEquals(true, $result->active);
         $this->assertGreaterThanOrEqual($expirationDate->subSeconds(10), $result->expiration_date);
         $this->assertLessThanOrEqual($result->expiration_date, $expirationDate->addSeconds(10));
-        // $this->assertSame($result->expiration_date, $expectedExpirationDate);
     }
 }

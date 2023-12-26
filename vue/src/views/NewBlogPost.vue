@@ -13,7 +13,8 @@
             placeholder="Title"
         ></textarea>
 
-        <div class="bg-gray-400 my-2">
+        Description
+        <div class="bg-gray-700 my-2">
             <QuillEditor
                 theme="snow"
                 v-model:content="model.description"
@@ -22,6 +23,30 @@
                 rows="5"
             />
         </div>
+        <div v-for="(content, i) in contentBlocks" :key="i">
+            <div class="bg-gray-700 my-2">
+                <div
+                    @click="removeContentBlock(content.id)"
+                    class="p-2 m-2 bg-slate-500 rounded-sm max-w-fit cursor-pointer"
+                >
+                    Remove block
+                </div>
+                <QuillEditor
+                    theme="snow"
+                    v-model:content="contentBlocks[i].text"
+                    :contentType="'html'"
+                    toolbar="essential"
+                    rows="5"
+                />
+            </div>
+        </div>
+        <button
+            class="flex p-2 m-2 bg-slate-500 rounded-sm"
+            @click="addContentBlock()"
+        >
+            Add new block
+        </button>
+
         <div class="my-2">
             <label
                 @click.stop
@@ -118,7 +143,7 @@
                     {{ tag
                     }}<span
                         @click="removeTag(tag)"
-                        class="bg-red-800 border-red-900 rounded-full px-2 pb-1 cursor-pointer"
+                        class="p-2 m-2 bg-slate-500 rounded-sm cursor-pointer"
                         >X</span
                     >
                 </span>
@@ -143,6 +168,10 @@ const image = ref(null);
 let allTags = ref([]);
 let filterText = ref("");
 let selected = null;
+
+const contentBlocks = ref([]);
+
+const newContentId = ref(0);
 
 onMounted(async () => {
     const res = await getTags();
@@ -171,6 +200,19 @@ function removeTag(tag) {
     model.value.tags = model.value.tags.filter((el) => el !== tag);
 }
 
+function addContentBlock(isText = true) {
+    newContentId.value = newContentId.value + 1;
+    if (isText) {
+        contentBlocks.value.push({ id: newContentId.value, text: "" });
+    } else {
+        contentBlocks.value.push({ id: newContentId.value, text: 1 });
+    }
+}
+
+function removeContentBlock(content) {
+    contentBlocks.value = contentBlocks.value.filter((el) => el.id !== content);
+}
+
 function onImageChoose(ev) {
     model.value.image = ev.target.files[0];
     image.value = URL.createObjectURL(ev.target.files[0]);
@@ -187,7 +229,12 @@ async function newPost() {
     }
     if (model.value.image) formData.append("image[]", model.value.image);
     if (model.value.tags) formData.set("tags", model.value.tags.join());
-
+    if (contentBlocks.value.length > 0) {
+        const blocks = contentBlocks.value.map((obj) => obj.text);
+        for (var i = 0; i < blocks.length; i++) {
+            formData.append("content[]", blocks[i]);
+        }
+    }
     console.log(formData);
     await savePost({
         formData,

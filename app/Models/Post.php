@@ -54,4 +54,9 @@ class Post extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    public function content()
+    {
+        return $this->hasMany(Content::class, 'post_id')->orderBy('order');
+    }
 }

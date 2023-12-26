@@ -2,8 +2,7 @@
 
 use App\Services\UploadProcessing\ImageProcessingService;
 use Tests\TestCase;
-// use App\Models\Image;
-use App\Models\Uploads;
+
 use Intervention\Image;
 use Mockery;
 

@@ -19,12 +19,14 @@ Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::resource('/tag', TagController::class)->only(['index']);
 Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
 Route::get('/donation', [DonationController::class, 'index']);
+Route::post('/webhook', [DonationController::class, 'webhook']);
+
+
 
 Route::middleware('guard')->group(function () {
     Route::post('/donation/{donation}', [DonationController::class, 'checkout']);
 });
 
-Route::post('/webhook', [DonationController::class, 'webhook']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);

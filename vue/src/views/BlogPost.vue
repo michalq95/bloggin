@@ -2,7 +2,7 @@
     <div v-if="!post">Loading...</div>
     <div
         v-else
-        class="max-w-4xl px-10 py-6 dark:bg-slate-600 rounded-lg shadow-md"
+        class="max-w-5xl px-10 py-6 dark:bg-slate-600 rounded-lg shadow-md"
     >
         <div class="flex justify-between items-center">
             <span class="font-light text-gray-800">{{ post.created_at }}</span>
@@ -37,34 +37,47 @@
                 class="m-4 text-gray-600 dark:text-gray-300 text-left"
                 v-html="post.description"
             ></div>
+            <article class="m-4 text-gray-600 dark:text-gray-300 text-left">
+                <div v-for="content in post.content">
+                    <div v-if="content.text" v-html="content.text"></div>
+                    <div v-if="content.upload && content.upload.image">
+                        <ImageComponent
+                            :imageUrl="content.upload.image.url"
+                            :width="96"
+                        ></ImageComponent>
+                    </div>
+                </div>
+            </article>
             <div
                 v-if="post.uploads && post.uploads.length > 0"
                 class="text-left flex flex-col"
             >
-                Downloads:
-                <div
-                    v-for="upload in post.uploads"
-                    :key="upload.id"
-                    class="flex my-1 cursor-pointer"
-                    @click="downloadFile(upload.id)"
-                >
-                    <img
-                        v-if="upload.image"
-                        :src="upload.image.url"
-                        alt="upload miniature"
-                        class="h-12 w-12 rounded-lg object-cover"
-                    />
+                <div v-if="isLoggedIn">
+                    Downloads:
+                    <div
+                        v-for="upload in post.uploads"
+                        :key="upload.id"
+                        class="flex my-1 cursor-pointer"
+                        @click="downloadFile(upload.id)"
+                    >
+                        <img
+                            v-if="upload.image"
+                            :src="upload.image.url"
+                            alt="upload miniature"
+                            class="h-12 w-12 rounded-lg object-cover"
+                        />
 
-                    <img
-                        v-else
-                        class="h-12 w-12 rounded-lg object-cover"
-                        src="../assets/placeholder.jpg"
-                        alt="placeholder_avatar"
-                    />
-                    {{ upload.filename }}
-                    {{ useHumanReadableFileSize(upload.size) }}
-                    <!-- {{ humanReadableFileSize(upload.size) }} -->
+                        <img
+                            v-else
+                            class="h-12 w-12 rounded-lg object-cover"
+                            src="../assets/placeholder.jpg"
+                            alt="placeholder_avatar"
+                        />
+                        {{ upload.filename }}
+                        {{ useHumanReadableFileSize(upload.size) }}
+                    </div>
                 </div>
+                <div v-else>Log in to download files</div>
             </div>
         </div>
         <div class="flex justify-between items-center mt-4">
@@ -94,7 +107,7 @@
             </div>
         </div>
         <div class="rounded-md p-2 dark:bg-slate-700 bg-sky-300">
-            <strong class="text-left text-black m-3">Comments:</strong>
+            <strong class="text-left text-white m-3">Comments</strong>
             <div class="flex justify-between items-center p-2">
                 <button
                     v-if="isLoggedIn"
@@ -112,9 +125,11 @@
                 :parentType="'post'"
             ></NewComment>
             <Comment
+                v-if="post.comments.length > 0"
                 v-for="comment in post.comments"
                 :comment="comment"
             ></Comment>
+            <div class="text-left" v-else>No comments so far</div>
             <button
                 v-if="post.comments_meta.has_next_page"
                 class="mt-1 focus:ring-indigo-500 w-1/6 py-3 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 dark:bg-slate-800"

@@ -17,7 +17,7 @@ trait HasUploads
         return $this->hasMany(Uploads::class, 'post_id');
     }
 
-    public function updateUploads($uploads)
+    public function addUploads($uploads)
     {
         foreach ($uploads as $upload) {
             $updatedUpload = Uploads::find($upload);
@@ -38,6 +38,15 @@ trait HasUploads
                     ProcessUpload::dispatch($updatedUpload, $processor);
                 }
             }
+        }
+    }
+
+    public function removeUpload($uploadId)
+    {
+        $upload = Uploads::find($uploadId);
+        if ($upload) {
+            $upload->post_id = null;
+            $upload->save();
         }
     }
 }

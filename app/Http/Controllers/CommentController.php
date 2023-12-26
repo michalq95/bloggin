@@ -51,8 +51,9 @@ class CommentController extends Controller
         $comment->update($data);
         $comment->tags()->sync($comment->addTags(request()->input('tags')));
         if ($comment && $request->hasFile('image')) {
-            foreach ($request->file('image') as $image)
+            foreach ($request->file('image') as $image) {
                 $comment->addImage($image);
+            }
         }
         return new CommentResource($comment);
     }
