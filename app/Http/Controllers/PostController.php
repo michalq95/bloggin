@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Content;
 use App\Models\Uploads;
+use App\Services\SetUpContent;
 use App\Services\UploadProcessing\UpdateUploadsInPostService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -49,26 +50,14 @@ class PostController extends Controller
     }
 
 
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request, SetUpContent $setUpContent)
     {
         $data = $request->validated();
         $post = Post::create($data);
 
-        foreach ($data["content"] as $index => $content) {
-            if (!is_string($content) && Uploads::find($content)) {
-                $newContent = Content::create([
-                    'uploads_id' => $content,
-                    'post_id' => $post->id,
-                    'order' => $index
-                ]);
-            }
-            if (is_string($content)) {
-                $newContent = Content::create([
-                    'text' => $content,
-                    'post_id' => $post->id,
-                    'order' => $index
-                ]);
-            }
+
+        if ($data['content']) {
+            $setUpContent->addContent($post, $data['content']);
         }
 
 
@@ -95,10 +84,15 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post, UpdateUploadsInPostService $uploadService)
+    public function update(UpdatePostRequest $request, Post $post, UpdateUploadsInPostService $uploadService, SetUpContent $setUpContent)
     {
         $data = $request->validated();
         $post->update($data);
+
+        if ($data['content']) {
+            $setUpContent->updateContent($post, $data['content']);
+        }
+
         $post->tags()->sync($post->addTags(request()->input('tags')));
         if ($post && $request->hasFile('image')) {
             foreach ($request->file('image') as $image)

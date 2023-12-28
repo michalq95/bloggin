@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->text("text")->nullable();
             $table->foreignId('uploads_id')->nullable()->constrained();
-            $table->foreignIdFor(Post::class, "post_id");
+            $table->foreignId("post_id")->nullable()->constrained();
             $table->unsignedInteger('order');
             $table->softDeletes();
             $table->timestamps();
