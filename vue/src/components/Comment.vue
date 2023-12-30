@@ -31,7 +31,12 @@
             </button>
 
             <button
-                v-if="isLoggedIn && comment.user.id == store.state.user.data.id"
+                v-if="
+                    isLoggedIn &&
+                    comment &&
+                    comment.user &&
+                    comment.user.id == store.state.user.data.id
+                "
                 class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
                 @click="switchEditing"
             >
@@ -101,11 +106,12 @@ async function loadMoreComments() {
     props.comment.comments_meta = data.comments_meta;
 }
 function addNewlyAddedComment(data) {
+    data = data.data;
     props.comment.comments.unshift({ ...data, parent: undefined });
 }
 
 function alterComment(data) {
-    // props.comment = Object.assign(props.comment, data);
+    data = data.data;
     props.comment.description = data.description;
     props.comment.image = data.image;
     props.comment.updated_at = data.updated_at;

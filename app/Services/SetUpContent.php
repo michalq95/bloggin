@@ -75,8 +75,6 @@ class SetUpContent
             }
         }
 
-
-
         return $newContent;
     }
 }

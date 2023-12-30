@@ -86,10 +86,9 @@ const user = ref({
 });
 
 async function login() {
-    // ev.preventDefault();
     const data = await loginService(user.value);
     if (data) {
-        store.commit("setUser", data.data);
+        store.commit("setUser", data);
         router.push({ name: "Home" });
     }
 }

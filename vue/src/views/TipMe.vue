@@ -45,11 +45,12 @@ const elements = ref(null);
 
 async function setDonation(id) {
     const res = await initiateDonation(id);
+    console.log(res);
     try {
         stripe.value = window.Stripe(import.meta.env.VITE_STRIPE_PUBKEY);
 
         const options = {
-            clientSecret: res.data.client_secret,
+            clientSecret: res.client_secret,
         };
 
         elements.value = stripe.value.elements(options);
@@ -60,9 +61,7 @@ async function setDonation(id) {
         console.error(e);
     }
 }
-async function tempsend() {
-    await donationSuccess("random value");
-}
+
 async function handleSubmit() {
     const { error } = await stripe.value.confirmPayment({
         elements: elements.value,

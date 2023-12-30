@@ -15,7 +15,6 @@ trait HasTags
     {
         $tags = explode(',', $requestTag);
         $tagIds = [];
-
         foreach ($tags as $tagName) {
             if ($tagName) {
                 $tag = Tag::firstOrCreate(['name' => trim($tagName)]);

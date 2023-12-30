@@ -2,28 +2,71 @@
     <div
         class="justify-between items-center py-3 px-5 my-2 shadow-md dark:bg-slate-600"
     >
-        <button class="flex p-2 m-2 bg-slate-500 rounded-sm" @click="confirm()">
-            Add new post
-        </button>
+        <div class="bg-slate-500 rounded-sm m-7">
+            <button
+                class="flex p-2 m-2 bg-slate-600 rounded-sm font-extrabold"
+                @click="confirm()"
+            >
+                Add new post
+            </button>
 
-        <textarea
-            v-model="model.title"
-            rows="1"
-            class="block p-2.5 w-full my-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Title"
-        ></textarea>
+            <textarea
+                v-model="model.title"
+                rows="1"
+                class="block p-2.5 w-full my-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Title"
+            ></textarea>
 
-        Description
-        <div class="bg-gray-700 my-2">
-            <QuillEditor
-                theme="snow"
-                v-model:content="model.description"
-                :contentType="'html'"
-                toolbar="essential"
-                rows="5"
-            />
+            Description
+            <div class="bg-gray-700 my-2">
+                <QuillEditor
+                    theme="snow"
+                    v-model:content="model.description"
+                    :contentType="'html'"
+                    toolbar="essential"
+                    rows="5"
+                />
+            </div>
+            <div class="my-2">
+                <label
+                    @click.stop
+                    class="cursor-pointer flex justify-start shrink-0"
+                    for="file-input"
+                >
+                    <img
+                        v-if="image"
+                        :src="image"
+                        class="flex rounded-md h-32 w-32 min-w-12 object-cover"
+                    />
+                    <span
+                        v-else
+                        class="flex items-center justify-center h-32 w-32 min-w-12 rounded-md bg-gray-100"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-32 w-32 text-gray-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </span>
+                    <button class="flex p-4 font-semibold">Select Image</button>
+                </label>
+                <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    @change="onImageChoose"
+                    style="display: none"
+                />
+            </div>
         </div>
-        <div v-for="(content, i) in contentBlocks" :key="i">
+        <!-- <div v-for="(content, i) in contentBlocks" :key="i">
             <div class="bg-gray-700 my-2">
                 <div
                     @click="removeContentBlock(content.id)"
@@ -39,52 +82,39 @@
                     rows="5"
                 />
             </div>
-        </div>
+        </div> -->
+        <draggable
+            class="list"
+            v-model="contentBlocks"
+            @start="drag = true"
+            @end="drag = false"
+            item-key="id"
+        >
+            <template #item="{ element, index }">
+                <div class="bg-gray-700 my-2">
+                    <div
+                        @click="removeContentBlock(element.id)"
+                        class="p-2 m-2 bg-slate-500 rounded-sm max-w-fit cursor-pointer"
+                    >
+                        Remove block
+                    </div>
+                    <QuillEditor
+                        theme="snow"
+                        v-model:content="contentBlocks[index].text"
+                        :contentType="'html'"
+                        toolbar="essential"
+                        rows="5"
+                    />
+                </div>
+            </template>
+        </draggable>
         <button
-            class="flex p-2 m-2 bg-slate-500 rounded-sm"
+            class="relative p-2 m-2 bg-slate-500 rounded-sm"
             @click="addContentBlock()"
         >
             Add new block
         </button>
 
-        <div class="my-2">
-            <label
-                @click.stop
-                class="cursor-pointer flex justify-start shrink-0"
-                for="file-input"
-            >
-                <img
-                    v-if="image"
-                    :src="image"
-                    class="flex rounded-md h-32 w-32 min-w-12 object-cover"
-                />
-                <span
-                    v-else
-                    class="flex items-center justify-center h-32 w-32 min-w-12 rounded-md bg-gray-100"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-32 w-32 text-gray-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </span>
-                <button class="flex p-4 font-semibold">Select Image</button>
-            </label>
-            <input
-                id="file-input"
-                type="file"
-                accept="image/*"
-                @change="onImageChoose"
-                style="display: none"
-            />
-        </div>
         <div class="px-4 py-5 bg-gray-400 dark:bg-gray-800 space-y-6 sm:p-6">
             <h3
                 class="text-2xl font-semibold flex items-center justify-between"
@@ -156,6 +186,7 @@
 import { ref, onMounted, computed } from "vue";
 import { savePost, getTags } from "../service";
 import { useRouter } from "vue-router";
+import Draggable from "vuedraggable";
 const router = useRouter();
 
 const model = ref({
@@ -175,6 +206,7 @@ const newContentId = ref(0);
 
 onMounted(async () => {
     const res = await getTags();
+    console.log(res);
     allTags.value = res.data;
 });
 

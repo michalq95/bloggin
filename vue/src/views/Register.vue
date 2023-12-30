@@ -13,7 +13,7 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" @submit="register">
+        <form class="space-y-6" @submit.prevent="register">
             <div>
                 <label
                     for="fullname"
@@ -121,7 +121,7 @@ const user = {
 async function register() {
     const data = await registerService(user);
     if (data) {
-        store.commit("setUser", data.data);
+        store.commit("setUser", data);
         router.push({ name: "Home" });
     }
 }

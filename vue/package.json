@@ -15,6 +15,8 @@
     "axios": "^1.5.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5",
+    "vue3-draggable": "^2.0.9",
+    "vuedraggable": "^4.1.0",
     "vuetify": "^3.3.21",
     "vuex": "^4.1.0"
   },

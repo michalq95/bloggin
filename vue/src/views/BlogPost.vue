@@ -144,7 +144,6 @@
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useHumanReadableFileSize } from "../composables/readableFileSize";
-// import { humanReadableFileSize } from "../helper";
 import { getPost, getMoreComments, downloadUploadedFile } from "../service";
 import store from "../store";
 import ImageComponent from "../components/ImageComponent.vue";
@@ -176,14 +175,15 @@ async function loadMoreComments() {
         page: post.value.comments_meta.page + 1,
     });
 
-    const filteredComments = data.comments.filter(
+    const filteredComments = data.data.comments.filter(
         (comment) => !doesCommentExist(post.value.comments, comment.id)
     );
     post.value.comments = [...post.value.comments, ...filteredComments];
-    post.value.comments_meta = data.comments_meta;
+    post.value.comments_meta = data.data.comments_meta;
 }
 
 function addNewlyAddedComment(data) {
+    data = data.data;
     post.value.comments.unshift({ ...data, parent: undefined });
 }
 

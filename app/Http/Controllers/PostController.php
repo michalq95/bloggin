@@ -55,11 +55,9 @@ class PostController extends Controller
         $data = $request->validated();
         $post = Post::create($data);
 
-
-        if ($data['content']) {
+        if (isset($data["content"])) {
             $setUpContent->addContent($post, $data['content']);
         }
-
 
         $tagIds = $post->addTags(request()->input('tags'));
         $post->tags()->sync($tagIds);
@@ -80,10 +78,6 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, Post $post, UpdateUploadsInPostService $uploadService, SetUpContent $setUpContent)
     {
         $data = $request->validated();
