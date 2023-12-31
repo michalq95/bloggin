@@ -98,13 +98,30 @@
                     >
                         Remove block
                     </div>
-                    <QuillEditor
-                        theme="snow"
-                        v-model:content="contentBlocks[index].text"
-                        :contentType="'html'"
-                        toolbar="essential"
-                        rows="5"
-                    />
+                    <div>
+                        <div v-if="element.uploadId" class="text-left">
+                            {{ element.uploadName }}
+                            <img
+                                v-if="element.uploadImage"
+                                :src="element.uploadImage"
+                                class="flex rounded-md h-32 w-32 min-w-12 object-cover"
+                            />
+                            <img
+                                v-else
+                                class="mx-2 w-32 h-32 object-cover rounded-sm"
+                                src="../assets/placeholder.jpg"
+                                alt="placeholder_avatar"
+                            />
+                        </div>
+                        <QuillEditor
+                            v-else
+                            theme="snow"
+                            v-model:content="contentBlocks[index].text"
+                            :contentType="'html'"
+                            toolbar="essential"
+                            rows="5"
+                        />
+                    </div>
                 </div>
             </template>
         </draggable>
@@ -114,7 +131,18 @@
         >
             Add new block
         </button>
-
+        <div>
+            <button
+                class="relative p-2 m-2 bg-slate-500 rounded-sm"
+                @click="showUploads = !showUploads"
+            >
+                Show Uploads
+            </button>
+            <UploadPicker
+                v-if="showUploads"
+                @selectUpload="addUpload"
+            ></UploadPicker>
+        </div>
         <div class="px-4 py-5 bg-gray-400 dark:bg-gray-800 space-y-6 sm:p-6">
             <h3
                 class="text-2xl font-semibold flex items-center justify-between"
@@ -185,6 +213,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { savePost, getTags } from "../service";
+import UploadPicker from "../components/UploadPicker.vue";
 import { useRouter } from "vue-router";
 import Draggable from "vuedraggable";
 const router = useRouter();
@@ -195,7 +224,10 @@ const model = ref({
     image: "",
     tags: [],
 });
+
 const image = ref(null);
+const showUploads = ref(false);
+
 let allTags = ref([]);
 let filterText = ref("");
 let selected = null;
@@ -206,7 +238,6 @@ const newContentId = ref(0);
 
 onMounted(async () => {
     const res = await getTags();
-    console.log(res);
     allTags.value = res.data;
 });
 
@@ -232,17 +263,23 @@ function removeTag(tag) {
     model.value.tags = model.value.tags.filter((el) => el !== tag);
 }
 
-function addContentBlock(isText = true) {
+function addContentBlock() {
     newContentId.value = newContentId.value + 1;
-    if (isText) {
-        contentBlocks.value.push({ id: newContentId.value, text: "" });
-    } else {
-        contentBlocks.value.push({ id: newContentId.value, text: 1 });
-    }
+    contentBlocks.value.push({ id: newContentId.value, text: "" });
 }
 
 function removeContentBlock(content) {
     contentBlocks.value = contentBlocks.value.filter((el) => el.id !== content);
+}
+
+function addUpload(upload) {
+    newContentId.value = newContentId.value + 1;
+    contentBlocks.value.push({
+        id: newContentId.value,
+        uploadId: upload.id,
+        uploadImage: upload.image ? upload.image.url : "",
+        uploadName: upload.filename ? upload.filename : "unnamed",
+    });
 }
 
 function onImageChoose(ev) {
@@ -262,12 +299,13 @@ async function newPost() {
     if (model.value.image) formData.append("image[]", model.value.image);
     if (model.value.tags) formData.set("tags", model.value.tags.join());
     if (contentBlocks.value.length > 0) {
-        const blocks = contentBlocks.value.map((obj) => obj.text);
+        const blocks = contentBlocks.value.map(
+            (obj) => obj.text || obj.uploadId
+        );
         for (var i = 0; i < blocks.length; i++) {
             formData.append("content[]", blocks[i]);
         }
     }
-    console.log(formData);
     await savePost({
         formData,
     });

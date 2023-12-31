@@ -45,6 +45,7 @@ class UploadsController extends Controller
                 $upload = Uploads::create([
                     'url' => $path,
                     'mimetype' => $file->getMimeType(),
+                    'filename'=>$file->getClientOriginalName(),
                     'extension' => $file->extension(),
                     'size' => $file->getSize(),
                     'user_id' => $data['user_id']

@@ -147,72 +147,74 @@ async function makeRequest(method, url, data = null) {
         const config = { method, url, data };
         const response = await axiosClient(config);
 
-
-
         return response.data;
     } catch (error) {
-        const errorMessage = error.response?.data?.message || 'An error occurred';
-        store.commit('setError', errorMessage);
+        const errorMessage =
+            error.response?.data?.message || "An error occurred";
+        store.commit("setError", errorMessage);
         return null;
     }
 }
 
 export async function login(user) {
-    return makeRequest('post', '/login', user);
+    return makeRequest("post", "/login", user);
 }
 
 export async function register(user) {
-    return makeRequest('post', '/register', user);
+    return makeRequest("post", "/register", user);
 }
 
 export async function logout() {
-    return makeRequest('post', '/logout');
+    return makeRequest("post", "/logout");
 }
 
-export async function getPosts({ page = 1, keyword = '' } = {}) {
+export async function getPosts({ page = 1, keyword = "" } = {}) {
     const url = `post?page=${page}&keyword=${keyword}`;
-    return makeRequest('get', url);
+    return makeRequest("get", url);
 }
 
 export async function getDonations() {
-    return makeRequest('get', 'donation');
+    return makeRequest("get", "donation");
 }
 export async function initiateDonation(id) {
-    return makeRequest('post', `donation/${id}`);
+    return makeRequest("post", `donation/${id}`);
 }
 
 export async function donationSuccess(token) {
-    return makeRequest('post', 'donation/success', { token });
+    return makeRequest("post", "donation/success", { token });
 }
 
 export async function donationFailure(token, error) {
-    return makeRequest('post', 'donation/failure', { token, error });
+    return makeRequest("post", "donation/failure", { token, error });
 }
 
 export async function getTags() {
-    return makeRequest('get', '/tag');
+    return makeRequest("get", "/tag");
+}
+export async function getUploads() {
+    return makeRequest("get", "/upload");
 }
 
 export async function getPost(id) {
-    return makeRequest('get', `post/${id}`);
+    return makeRequest("get", `post/${id}`);
 }
 
 export async function getMoreComments({ model, id, page = 2 } = {}) {
     const url = `${model}/${id}/comment?page=${page}`;
-    return makeRequest('get', url);
+    return makeRequest("get", url);
 }
 
 export async function saveComment({ model, id, formData } = {}) {
     const url = `${model}/${id}/comment`;
-    return makeRequest('post', url, formData);
+    return makeRequest("post", url, formData);
 }
 
 export async function savePost({ formData } = {}) {
-    return makeRequest('post', 'post', formData);
+    return makeRequest("post", "post", formData);
 }
 
 export async function putComment({ id, formData }) {
-    return makeRequest('post', `comment/${id}`, formData);
+    return makeRequest("post", `comment/${id}`, formData);
 }
 export async function downloadUploadedFile(id) {
     try {
