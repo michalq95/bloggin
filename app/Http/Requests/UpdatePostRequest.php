@@ -26,7 +26,7 @@ class UpdatePostRequest extends FormRequest
             'description' => 'nullable|string',
             "image" => 'nullable',
             'image.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2000',
-            'uploads.*' => 'nullable|exists:uploads,id',
+            // 'uploads.*' => 'nullable|exists:uploads,id',
             'content.*' => 'nullable',
         ];
     }

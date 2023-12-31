@@ -13,12 +13,18 @@ class SetUpContent
     {
         $newContent = [];
         foreach ($arrayContent as $index => $content) {
-            if (!is_string($content) && Uploads::find($content)) {
-                $newContent[] = Content::create([
+            if (!is_string($content) && $upload = Uploads::find($content)) {
+                
+        
+                
+                $createdContent = Content::create([
                     'uploads_id' => $content,
                     'post_id' => $post->id,
                     'order' => $index
                 ]);
+                $newContent[] = $createdContent;
+                $createdContent->addUploadToContent($upload);
+
             }
             if (is_string($content)) {
                 $newContent[] = Content::create([

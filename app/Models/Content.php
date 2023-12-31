@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasUploads;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Content extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasUploads;
 
     protected $fillable = ['text', 'uploads_id', 'post_id', 'order'];
 

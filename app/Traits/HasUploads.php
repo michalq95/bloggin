@@ -40,6 +40,26 @@ trait HasUploads
             }
         }
     }
+    public function addUploadToContent($upload)
+    {
+
+
+                $processor = new UploadProcessor();
+
+
+                if (str_starts_with($upload['mimetype'], 'image')) {
+                    $processor->setStrategy(new ImageProcessingStrategy());
+                    ProcessUpload::dispatch($upload, $processor);
+                } elseif (str_starts_with($upload['mimetype'], 'video')) {
+                    $processor->setStrategy(new VideoProcessingStrategy());
+                    ProcessUpload::dispatch($upload, $processor);
+                } elseif (str_starts_with($upload['mimetype'], 'audio')) {
+                    $processor->setStrategy(new AudioProcessingStrategy());
+                    ProcessUpload::dispatch($upload, $processor);
+                }
+            
+        
+    }
 
     public function removeUpload($uploadId)
     {
