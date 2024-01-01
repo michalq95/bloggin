@@ -89,12 +89,13 @@
             @start="drag = true"
             @end="drag = false"
             item-key="id"
+            :disabled="active"
         >
             <template #item="{ element, index }">
                 <div class="bg-gray-700 my-2">
                     <div
                         @click="removeContentBlock(element.id)"
-                        class="p-2 m-2 bg-slate-500 rounded-sm max-w-fit cursor-pointer"
+                        class="p-2 bg-slate-500 rounded-sm max-w-fit cursor-pointer float-right"
                     >
                         Remove block
                     </div>
@@ -113,24 +114,57 @@
                                 alt="placeholder_avatar"
                             />
                         </div>
-                        <QuillEditor
+                        <div
+                            class=""
+                            :class="active == element.id ? 'bg-slate-200' : ''"
+                            v-else
+                        >
+                            <div
+                                @click="setActive(element.id)"
+                                class="p-2 m-2 bg-slate-500 rounded-sm max-w-fit cursor-pointer"
+                            >
+                                Edit text {{ element.id }}
+                            </div>
+                            <QuillEditor
+                                v-if="active == element.id"
+                                class="text-black"
+                                theme="snow"
+                                v-model:content="tempContent"
+                                :contentType="'html'"
+                                toolbar="essential"
+                                rows="5"
+                            />
+                            <span v-else v-html="element.text"></span>
+                        </div>
+                        <!-- <QuillEditor
                             v-else
                             theme="snow"
                             v-model:content="contentBlocks[index].text"
                             :contentType="'html'"
                             toolbar="essential"
                             rows="5"
-                        />
+                        /> -->
+
+                        <!-- <QuillEditor
+                            v-else
+                            theme="snow"
+                            v-model:content="element.text"
+                            :contentType="'html'"
+                            toolbar="essential"
+                            rows="5"
+                        /> -->
                     </div>
                 </div>
             </template>
         </draggable>
+        <div class="bg-slate-200 text-black"></div>
         <button
             class="relative p-2 m-2 bg-slate-500 rounded-sm"
             @click="addContentBlock()"
         >
             Add new block
         </button>
+        {{ active }}
         <div>
             <button
                 class="relative p-2 m-2 bg-slate-500 rounded-sm"
@@ -228,9 +262,11 @@ const model = ref({
 const image = ref(null);
 const showUploads = ref(false);
 
+const tempContent = ref("");
 let allTags = ref([]);
 let filterText = ref("");
 let selected = null;
+const active = ref(0);
 
 const contentBlocks = ref([]);
 
@@ -264,8 +300,15 @@ function removeTag(tag) {
 }
 
 function addContentBlock() {
+    if (active.value > 0) {
+        const block = contentBlocks.value.find((el) => el.id == active.value);
+        block.text = tempContent.value;
+        tempContent.value = "";
+    }
+
     newContentId.value = newContentId.value + 1;
     contentBlocks.value.push({ id: newContentId.value, text: "" });
+    active.value = newContentId.value;
 }
 
 function removeContentBlock(content) {
@@ -287,6 +330,20 @@ function onImageChoose(ev) {
     image.value = URL.createObjectURL(ev.target.files[0]);
 }
 
+function setActive(id) {
+    if (active.value > 0) {
+        const block = contentBlocks.value.find((el) => el.id == active.value);
+        block.text = tempContent.value;
+        tempContent.value = "";
+    }
+    if (id > 0) {
+        // tempContent.value = contentBlocks.value[id - 1].text;
+        tempContent.value = contentBlocks.value.find((el) => el.id == id).text;
+    }
+
+    active.value == id ? (active.value = 0) : (active.value = id);
+}
+
 function confirm() {
     newPost();
 }
@@ -300,7 +357,7 @@ async function newPost() {
     if (model.value.tags) formData.set("tags", model.value.tags.join());
     if (contentBlocks.value.length > 0) {
         const blocks = contentBlocks.value.map(
-            (obj) => obj.text || obj.uploadId
+            (obj) => obj.text || "__upload" + obj.uploadId
         );
         for (var i = 0; i < blocks.length; i++) {
             formData.append("content[]", blocks[i]);

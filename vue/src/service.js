@@ -216,6 +216,9 @@ export async function savePost({ formData } = {}) {
 export async function putComment({ id, formData }) {
     return makeRequest("post", `comment/${id}`, formData);
 }
+export async function postUpload({ formData }) {
+    return makeRequest("post", `upload`, formData);
+}
 export async function downloadUploadedFile(id) {
     try {
         const res = await axiosClient.get(`upload/${id}`, {

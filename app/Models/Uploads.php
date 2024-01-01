@@ -15,6 +15,6 @@ class Uploads extends Model
 
     public function image()
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

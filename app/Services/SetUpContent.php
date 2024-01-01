@@ -13,20 +13,20 @@ class SetUpContent
     {
         $newContent = [];
         foreach ($arrayContent as $index => $content) {
-            if (!is_string($content) && $upload = Uploads::find($content)) {
-                
-        
-                
-                $createdContent = Content::create([
-                    'uploads_id' => $content,
-                    'post_id' => $post->id,
-                    'order' => $index
-                ]);
-                $newContent[] = $createdContent;
-                $createdContent->addUploadToContent($upload);
-
-            }
-            if (is_string($content)) {
+            // if (!is_string($content) && $upload = Uploads::find($content)) {
+            if (preg_match('/^__upload(\d+)$/', $content, $matches)) {
+                $id = $matches[1];
+                $upload = Uploads::find($id);
+                if ($upload) {
+                    $createdContent = Content::create([
+                        'uploads_id' => $id,
+                        'post_id' => $post->id,
+                        'order' => $index
+                    ]);
+                    $newContent[] = $createdContent;
+                    $createdContent->addUploadToContent($upload);
+                }
+            } else {
                 $newContent[] = Content::create([
                     'text' => $content,
                     'post_id' => $post->id,
@@ -54,13 +54,14 @@ class SetUpContent
                 }
             } elseif (preg_match('/^__content(\d+)$/', $content, $matches)) {
                 $id = $matches[1];
-                if (Uploads::find($id)) {
+                if ($upload = Uploads::find($id)) {
                     $new =  Content::create([
                         'uploads_id' => $id,
                         'post_id' => $post->id,
                         'order' => $index
                     ]);
                     $newContent[] = $new->id;
+                    $new->addUploadToContent($upload);
                 }
             } else {
                 $new = Content::create([

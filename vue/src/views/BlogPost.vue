@@ -40,11 +40,22 @@
             <article class="m-4 text-gray-600 dark:text-gray-300 text-left">
                 <div v-for="content in post.content">
                     <div v-if="content.text" v-html="content.text"></div>
-                    <div v-if="content.upload && content.upload.image">
+                    <div
+                        class="flex"
+                        v-if="content.upload && content.upload.image"
+                    >
                         <ImageComponent
                             :imageUrl="content.upload.image.url"
                             :width="96"
                         ></ImageComponent>
+                        <div
+                            class="my-1 cursor-pointer text-teal-200"
+                            @click="downloadFile(content.upload.id)"
+                        >
+                            Download
+                            {{ content.upload.filename }}
+                            {{ useHumanReadableFileSize(content.upload.size) }}
+                        </div>
                     </div>
                 </div>
             </article>
