@@ -164,14 +164,13 @@
         >
             Add new block
         </button>
-        {{ active }}
+        <button
+            class="relative p-2 m-2 bg-slate-500 rounded-sm"
+            @click="showUploads = !showUploads"
+        >
+            Show Uploads
+        </button>
         <div>
-            <button
-                class="relative p-2 m-2 bg-slate-500 rounded-sm"
-                @click="showUploads = !showUploads"
-            >
-                Show Uploads
-            </button>
             <UploadPicker
                 v-if="showUploads"
                 @selectUpload="addUpload"

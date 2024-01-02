@@ -21,6 +21,7 @@ class UploadResource extends JsonResource
             'post_id' => $this->post_id,
             'image' => new ImageResource($this->latestImage),
             'filename' => $this->filename,
+            'mimetype' => $this->mimetype,
             'extension' => $this->extension,
             'size' => $this->size,
 
