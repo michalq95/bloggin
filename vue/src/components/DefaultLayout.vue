@@ -1,7 +1,7 @@
 <template>
     <div class="h-full w-full">
         <header
-            class="md:mb-8 py-4 px-4 bg-slate-400 flex justify-between items-center select-none"
+            class="md:mb-8 py-4 px-4 bg-slate-400 dark:bg-slate-800 flex justify-between items-center select-none"
         >
             <div
                 class="text-2xl font-semibold flex-none justify-between items-center"
@@ -56,8 +56,6 @@
                     </div>
                 </div>
 
-                <!-- Desktop Links -->
-
                 <div class="hidden md:block text-sm">
                     <div></div>
                     <div v-if="!token">
@@ -85,6 +83,12 @@
                             />
                             Welcome {{ user.name }}!
                         </span>
+                        <router-link
+                            :to="{ name: 'Profile' }"
+                            class="py-2 px-3 ml-2 hover:bg-indigo-400 bg-indigo-500 rounded shadow-lg border text-white"
+                        >
+                            Profile
+                        </router-link>
 
                         <span
                             @click="logout"
@@ -137,10 +141,17 @@
                     </router-link>
                 </div>
                 <div v-else>
+                    <router-link
+                        :to="{ name: 'Profile' }"
+                        class="block font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                    >
+                        Profile
+                    </router-link>
                     <div
                         class="block font-semibold text-gray-800 py-2 px-3 rounded"
                     >
                         <img
+                            v-if="user.image"
                             :src="user.image"
                             alt=""
                             class="inline w-8 object-cover"

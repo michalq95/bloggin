@@ -3,11 +3,11 @@
 
     <div v-else class="max-w-5xl m-auto">
         <div class="flex justify-end">
-            <button class="text-slate-100 bg-slate-700 p-2">
-                <router-link
-                    v-if="$store.getters.getPermissions.includes('create post')"
-                    :to="{ name: 'NewBlogpost' }"
-                >
+            <button
+                v-if="$store.getters.getPermissions.includes('create post')"
+                class="text-slate-100 bg-slate-700 p-2"
+            >
+                <router-link :to="{ name: 'NewBlogpost' }">
                     Create Post
                 </router-link>
             </button>

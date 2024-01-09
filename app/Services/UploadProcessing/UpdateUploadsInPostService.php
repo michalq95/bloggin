@@ -14,6 +14,7 @@ class UpdateUploadsInPostService
         $uploadsToAdd = array_diff($newUploadIds, $currentUploadIds);
         $uploadsToRemove = array_diff($currentUploadIds, $newUploadIds);
 
+
         foreach ($uploadsToRemove as $uploadId) {
             $post->removeUpload($uploadId);
         }

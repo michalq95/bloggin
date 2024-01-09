@@ -9,6 +9,7 @@ import NotAuthorized from "../views/NotAuthorized.vue";
 import TipMe from "../views/TipMe.vue";
 import Thanks from "../views/Thanks.vue";
 import Home from "../views/Home.vue";
+import Profile from "../views/Profile.vue";
 import store from "../store";
 
 const routes = [
@@ -58,6 +59,12 @@ const routes = [
         name: "NewBlogpost",
         component: NewBlogPost,
         meta: { requiresAuth: true, requiresPermission: "create post" },
+    },
+    {
+        path: "/profile",
+        name: "Profile",
+        component: Profile,
+        meta: { requiresAuth: true },
     },
 ];
 const router = createRouter({

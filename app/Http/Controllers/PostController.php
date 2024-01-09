@@ -83,7 +83,7 @@ class PostController extends Controller
         $data = $request->validated();
         $post->update($data);
 
-        if ($data['content']) {
+        if (isset($data['content'])) {
             $setUpContent->updateContent($post, $data['content']);
         }
 

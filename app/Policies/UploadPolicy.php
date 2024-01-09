@@ -13,10 +13,10 @@ class UploadPolicy
     }
     public function view(): bool
     {
-        return true;
+        return true; //$user->can("create post");
     }
     public function viewAny(User $user)
     {
-        return $user->can("create post");
+        return true; //$user->can("create post");
     }
 }

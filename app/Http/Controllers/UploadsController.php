@@ -21,6 +21,7 @@ class UploadsController extends Controller
 {
     public function __construct()
     {
+
         $this->authorizeResource(Uploads::class, 'uploads');
     }
 
@@ -45,7 +46,7 @@ class UploadsController extends Controller
                 $upload = Uploads::create([
                     'url' => $path,
                     'mimetype' => $file->getMimeType(),
-                    'filename'=>$file->getClientOriginalName(),
+                    'filename' => $file->getClientOriginalName(),
                     'extension' => $file->extension(),
                     'size' => $file->getSize(),
                     'user_id' => $data['user_id']
@@ -58,6 +59,7 @@ class UploadsController extends Controller
     }
     public function show(Uploads $uploads)
     {
+
         $filePath = $uploads["url"];
         if (!Storage::disk('local')->exists($filePath)) {
             abort(404, 'File not found');
@@ -74,17 +76,13 @@ class UploadsController extends Controller
 
         // $uploads = Uploads::where('id', $id)->first();
 
+
         $processor = new UploadProcessor();
-        if (str_starts_with($uploads['mimetype'], 'image')) {
-            $processor->setStrategy(new ImageProcessingStrategy());
-            ProcessUpload::dispatch($uploads, $processor);
-        } elseif (str_starts_with($uploads['mimetype'], 'video')) {
-            $processor->setStrategy(new VideoProcessingStrategy());
-            ProcessUpload::dispatch($uploads, $processor);
-        } elseif (str_starts_with($uploads['mimetype'], 'audio')) {
-            $processor->setStrategy(new AudioProcessingStrategy());
-            ProcessUpload::dispatch($uploads, $processor)->onQueue("database");
-        }
+
+
+        $processor->setStrategy($processor->decideStrategy($uploads));
+
+        ProcessUpload::dispatch($uploads, $processor);
     }
 
 

@@ -33,12 +33,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/post', PostController::class)->except(['index', 'show']);
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
+
     Route::resource('/upload', UploadsController::class)->only(['store', 'index']);
+    Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
     Route::delete('/upload/{uploads}', [UploadsController::class, 'destroy']);
     Route::put('/upload/{uploads}', [UploadsController::class, 'update']);
-    Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
-    Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::get("/upload/{uploads}/test", [UploadsController::class, 'test']);
+
+
+
+    Route::resource('/image', ImageController::class)->only(['destroy']);
     Route::resource("/premium", PremiumMembershipController::class)->middleware(AdminOnlyGuardMiddleware::class);
 
     Route::get('/user', function (Request $request) {

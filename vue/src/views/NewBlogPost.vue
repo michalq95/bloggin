@@ -9,7 +9,6 @@
             >
                 Add new post
             </button>
-
             <textarea
                 v-model="model.title"
                 rows="1"
@@ -344,6 +343,7 @@ function setActive(id) {
 }
 
 function confirm() {
+    setActive(0);
     newPost();
 }
 
@@ -362,6 +362,7 @@ async function newPost() {
             formData.append("content[]", blocks[i]);
         }
     }
+
     await savePost({
         formData,
     });

@@ -82,7 +82,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { getUploads, postUpload } from "../service";
+import { getUploads, postUpload, deleteUpload } from "../service";
 
 const emit = defineEmits(["selectUpload"]);
 const uploads = ref([]);
@@ -93,8 +93,9 @@ const tempMiniature = ref(null);
 function pickUpload(upload) {
     emit("selectUpload", upload);
 }
-function removeUpload(upload) {
-    emit("selectUpload", upload);
+async function removeUpload(upload) {
+    await deleteUpload(upload.id);
+    await loadUploads();
 }
 const fileTypeToMiniature = computed(() => ({
     // image: URL.createObjectURL,

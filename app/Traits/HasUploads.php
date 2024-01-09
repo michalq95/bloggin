@@ -8,6 +8,7 @@ use App\Services\UploadProcessing\AudioProcessingStrategy;
 use App\Services\UploadProcessing\ImageProcessingStrategy;
 use App\Services\UploadProcessing\UploadProcessor;
 use App\Services\UploadProcessing\VideoProcessingStrategy;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 trait HasUploads
@@ -21,22 +22,16 @@ trait HasUploads
     {
         foreach ($uploads as $upload) {
             $updatedUpload = Uploads::find($upload);
+
+
             if (!$updatedUpload->post_id) {
                 $updatedUpload->update(['post_id' => $this->id]);
 
                 $processor = new UploadProcessor();
 
+                $processor->setStrategy($processor->decideStrategy($updatedUpload));
 
-                if (str_starts_with($updatedUpload['mimetype'], 'image')) {
-                    $processor->setStrategy(new ImageProcessingStrategy());
-                    ProcessUpload::dispatch($updatedUpload, $processor);
-                } elseif (str_starts_with($updatedUpload['mimetype'], 'video')) {
-                    $processor->setStrategy(new VideoProcessingStrategy());
-                    ProcessUpload::dispatch($updatedUpload, $processor);
-                } elseif (str_starts_with($updatedUpload['mimetype'], 'audio')) {
-                    $processor->setStrategy(new AudioProcessingStrategy());
-                    ProcessUpload::dispatch($updatedUpload, $processor);
-                }
+                ProcessUpload::dispatch($updatedUpload, $processor);
             }
         }
     }
@@ -51,16 +46,9 @@ trait HasUploads
         $processor = new UploadProcessor();
 
 
-        if (str_starts_with($upload['mimetype'], 'image')) {
-            $processor->setStrategy(new ImageProcessingStrategy());
-            ProcessUpload::dispatch($upload, $processor);
-        } elseif (str_starts_with($upload['mimetype'], 'video')) {
-            $processor->setStrategy(new VideoProcessingStrategy());
-            ProcessUpload::dispatch($upload, $processor);
-        } elseif (str_starts_with($upload['mimetype'], 'audio')) {
-            $processor->setStrategy(new AudioProcessingStrategy());
-            ProcessUpload::dispatch($upload, $processor);
-        }
+        $processor->setStrategy($processor->decideStrategy($upload));
+
+        ProcessUpload::dispatch($upload, $processor);
     }
 
     public function removeUpload($uploadId)
