@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserImage;
+use App\Http\Resources\UserResource;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ImageController extends Controller
 {
@@ -18,9 +21,13 @@ class ImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserImage $request)
     {
-        //
+        $user = Auth::user();
+        $image = $request->file('image')[0];
+        $user->addImage($image);
+
+        return new UserResource(Auth::user());
     }
 
     /**

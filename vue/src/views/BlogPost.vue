@@ -97,8 +97,12 @@
                     >updated:{{ post.updated_at }}</span
                 ></span
             >
+            <Avatar
+                :image="post.user.image?.url"
+                :name="post.user.name"
+            ></Avatar>
             <div>
-                <a class="flex items-center" href="#">
+                <!-- <a class="flex items-center" href="#">
                     <img
                         v-if="post.user.image"
                         class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
@@ -114,7 +118,7 @@
                     <h1 class="text-gray-700 font-bold hover:underline">
                         {{ post.user.name }}
                     </h1>
-                </a>
+                </a> -->
             </div>
         </div>
         <div class="rounded-md p-2 dark:bg-slate-700 bg-sky-300">
@@ -160,6 +164,7 @@ import store from "../store";
 import ImageComponent from "../components/ImageComponent.vue";
 import Comment from "../components/Comment.vue";
 import NewComment from "../components/NewComment.vue";
+import Avatar from "../components/Avatar.vue";
 
 const route = useRoute();
 

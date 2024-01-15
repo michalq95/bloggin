@@ -17,7 +17,13 @@
             <div class="flex font-bold text-slate-200">
                 {{ comment.title }} {{ comment.id }}
             </div>
-            <div class="flex">{{ comment.created_at }}</div>
+            <div class="flex">
+                <Avatar
+                    :image="comment.user.image?.url"
+                    :name="comment.user.name"
+                ></Avatar>
+                {{ comment.created_at }}
+            </div>
         </div>
         <div class="text-left p-2" v-html="comment.description"></div>
 
@@ -79,6 +85,7 @@ import store from "../store";
 import { getMoreComments } from "../service";
 import NewComment from "./NewComment.vue";
 import ImageComponent from "./ImageComponent.vue";
+import Avatar from "../components/Avatar.vue";
 
 const emit = defineEmits(["alterCommentInParent"]);
 

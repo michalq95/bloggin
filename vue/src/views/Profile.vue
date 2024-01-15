@@ -63,23 +63,33 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-import { useDark, useToggle } from "@vueuse/core";
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
+import { useRouter } from "vue-router";
+import { saveUserImage } from "../service";
 
 const image = ref();
+const router = useRouter();
 
 const store = useStore();
 const user = computed(() => store.state.user.data);
 const model = ref({
     image: "",
-    dark: user.darkMode ?? false,
 });
 function onImageChoose(ev) {
     model.value.image = ev.target.files[0];
     image.value = URL.createObjectURL(ev.target.files[0]);
 }
-function confirm() {
-    const formData = new FormData();
+async function confirm() {
+    if (model.value.image) {
+        const formData = new FormData();
+        formData.append("image[]", model.value.image);
+
+        const user = await saveUserImage({ formData });
+        console.log(user.data);
+        if (user) {
+            store.commit("setUser", { userData: user.data });
+        }
+    } else {
+        store.commit("setError", "Select image to upload");
+    }
 }
 </script>

@@ -31,12 +31,14 @@ const store = createStore({
             sessionStorage.removeItem("BLOG_TOKEN");
             sessionStorage.removeItem("BLOG_USER");
         },
-        setUser: (state, userData) => {
-            state.user.token = userData.token;
-            state.user.data = userData.user;
-            sessionStorage.setItem("BLOG_USER", JSON.stringify(userData.user));
-
-            sessionStorage.setItem("BLOG_TOKEN", userData.token);
+        setUser: (state, { userData, token = null }) => {
+            console.log(userData, token);
+            state.user.data = userData;
+            sessionStorage.setItem("BLOG_USER", JSON.stringify(userData));
+            if (token) {
+                state.user.token = token;
+                sessionStorage.setItem("BLOG_TOKEN", token);
+            }
         },
     },
     modules: {},

@@ -82,8 +82,8 @@ export async function deleteUpload(id) {
     return makeRequest("delete", `upload/${id}`);
 }
 
-export async function saveUserSettings({ formData } = {}) {
-    return makeRequest("put", "user", formData);
+export async function saveUserImage({ formData } = {}) {
+    return makeRequest("post", "image", formData);
 }
 export async function downloadUploadedFile(id) {
     try {

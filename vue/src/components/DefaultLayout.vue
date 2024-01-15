@@ -76,10 +76,9 @@
 
                     <div v-else>
                         <span class="py-2 px-3 ml-2 rounded">
-                            <img
-                                :src="user.image"
-                                alt=""
-                                class="inline w-8 object-cover"
+                            <Avatar
+                                class="inline-flex"
+                                :image="user.image?.url"
                             />
                             Welcome {{ user.name }}!
                         </span>
@@ -150,13 +149,7 @@
                     <div
                         class="block font-semibold text-gray-800 py-2 px-3 rounded"
                     >
-                        <img
-                            v-if="user.image"
-                            :src="user.image"
-                            alt=""
-                            class="inline w-8 object-cover"
-                        />
-
+                        <Avatar class="inline-block" :image="user.image?.url" />
                         Welcome {{ user.name }}!
                     </div>
 
@@ -172,15 +165,26 @@
 
         <div v-if="$store.state.error404">404 not found</div>
         <router-view :key="$route.fullPath" v-else></router-view>
+        <footer
+            class="md:mb-8 py-4 px-4 bg-slate-400 dark:bg-slate-800 flex justify-between items-center select-none"
+        >
+            <button
+                class="text-slate-900 dark:text-slate-200"
+                @click="toggleDark()"
+            >
+                Toggle Color Mode
+            </button>
+        </footer>
     </div>
 </template>
 
 <script setup>
 import { useStore } from "vuex";
-
-import { computed, reactive, ref } from "vue";
+import { useDark, useToggle } from "@vueuse/core";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { logout as logoutService } from "../service";
+import Avatar from "./Avatar.vue";
 
 const menuIsOpen = ref(false);
 
@@ -188,6 +192,9 @@ const store = useStore();
 const router = useRouter();
 const user = computed(() => store.state.user.data);
 const token = computed(() => store.state.user.token);
+
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
 async function logout() {
     const data = await logoutService(user);

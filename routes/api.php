@@ -42,7 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-    Route::resource('/image', ImageController::class)->only(['destroy']);
+    Route::resource('/image', ImageController::class)->only(['destroy', 'store']);
     Route::resource("/premium", PremiumMembershipController::class)->middleware(AdminOnlyGuardMiddleware::class);
 
     Route::get('/user', function (Request $request) {

@@ -87,8 +87,9 @@ const user = ref({
 
 async function login() {
     const data = await loginService(user.value);
+    console.log(data.token);
     if (data) {
-        store.commit("setUser", data);
+        store.commit("setUser", { userData: data.user, token: data.token });
         router.push({ name: "Home" });
     }
 }
