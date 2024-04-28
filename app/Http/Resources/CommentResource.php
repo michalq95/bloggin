@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
 class CommentResource extends JsonResource
@@ -26,6 +27,8 @@ class CommentResource extends JsonResource
             'image' => new ImageResource($this->latestImage),
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
+            'score' => $this->score ?  $this->score->score : 0,
+            'vote' => $this->votes
         ];
     }
 }

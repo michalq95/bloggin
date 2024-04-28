@@ -8,14 +8,14 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PremiumMembershipController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UploadsController;
+use App\Http\Controllers\VoteController;
 use App\Http\Middleware\AdminOnlyGuardMiddleware;
 use App\Http\Middleware\BindCommentRoute;
+use App\Http\Middleware\BindVotableRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middleware(BindCommentRoute::class);
 
-Route::resource('/post', PostController::class)->only(['index', 'show']);
 Route::resource('/tag', TagController::class)->only(['index']);
 Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
 Route::get('/donation', [DonationController::class, 'index']);
@@ -25,10 +25,15 @@ Route::post('/webhook', [DonationController::class, 'webhook']);
 
 Route::middleware('guard')->group(function () {
     Route::post('/donation/{donation}', [DonationController::class, 'checkout']);
+    Route::get('/{model}/{id}/comment', [CommentController::class, 'index'])->middleware(BindCommentRoute::class);
+    Route::resource('/post', PostController::class)->only(['index', 'show']);
 });
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+
+
     Route::post('logout',   [AuthController::class, 'logout']);
     Route::get('permissions',   [AuthController::class, 'permissions']);
     Route::get('/post/user/{user}', [PostController::class, 'userPosts']);
@@ -36,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/post', PostController::class)->except(['index', 'show']);
 
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
+    Route::post('/{model}/{id}/vote', [VoteController::class, 'store'])->middleware(BindVotableRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
 
     Route::resource('/upload', UploadsController::class)->only(['store', 'index']);

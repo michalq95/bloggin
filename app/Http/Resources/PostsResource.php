@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
 class PostsResource extends JsonResource
@@ -10,6 +11,7 @@ class PostsResource extends JsonResource
     public function toArray($request)
     {
 
+        $userId = auth('sanctum')->user()['id'] ?? null;
 
         return [
             'id' => $this->id,
@@ -21,7 +23,10 @@ class PostsResource extends JsonResource
             'image' => new ImageResource($this->oldestImage),
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
-
+            'score' => $this->score ?  $this->score->score : 0,
+            'vote' => $this->when($userId, function () use ($userId) {
+                return $this->votes()->where('user_id', $userId)->first();
+            })
         ];
     }
 }

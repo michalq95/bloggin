@@ -27,7 +27,12 @@ class PostController extends Controller
         $keywords = $request->input('keyword');
         $page = $request->input("page", 1);
         $query = Post::with(["tags",  "user", "oldestImage"]);
-
+        if (auth('sanctum')->check()) {
+            $userId = auth('sanctum')->id();
+            $query->with(['votes' => function ($query) use ($userId) {
+                $query->where('user_id', $userId)->first();
+            }]);
+        }
         if ($keywords) {
             $keywords = explode(",", $keywords);
             $query->where(function ($query) use ($keywords) {
@@ -42,10 +47,13 @@ class PostController extends Controller
         } else if ($page != 1) {
             $posts = $query->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
         } else {
-            $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
-                return $query->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
-            });
+            $posts = $query->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
+
+            // $posts = Cache::remember('posts', 60 * 60 * 24, function () use ($query) {
+            //     return $query->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
+            // });
         }
+        // dd($posts);
         return PostsResource::collection($posts);
     }
 
@@ -67,9 +75,6 @@ class PostController extends Controller
                 $post->addImage($image);
         }
 
-        // if (isset($data["uploads"])) {
-        //     $post->addUploads($data["uploads"]);
-        // }
         return new PostResource($post);
     }
 

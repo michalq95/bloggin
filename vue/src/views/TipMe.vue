@@ -19,8 +19,13 @@
         </div>
     </div>
     <form id="payment-form">
-        <div id="payment-element"></div>
-        <button v-if="stripe" type="submit" @click.prevent="handleSubmit">
+        <div class="bg-slate-200 rounded-lg" id="payment-element"></div>
+        <button
+            class="p-4 bg-slate-400 dark:text-slate-800 text-slate-800 cursor-pointer hover:bg-slate-500 transition-colors"
+            v-if="stripe"
+            type="submit"
+            @click.prevent="handleSubmit"
+        >
             Pay via Stripe
         </button>
     </form>

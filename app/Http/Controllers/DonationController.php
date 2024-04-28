@@ -20,7 +20,6 @@ class DonationController extends Controller
 {
     public function index(Request $request)
     {
-        // $donations = Donation::all();
         $donations = Cache::remember(
             'donations',
             60 * 60 * 24,
@@ -55,7 +54,6 @@ class DonationController extends Controller
             abort(400);
         }
 
-        // $token = Uuid::uuid7()->toString();
         DonationOrder::create(
             [
                 "status" => 'pending',
