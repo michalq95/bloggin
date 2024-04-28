@@ -18,7 +18,8 @@ class BindCommentRoute
         if (!$id || !$model) {
             return new JsonResponse('Provide model and id', 422);
         }
-        $allowed = ['post', 'comment'];
+
+        $allowed = ['post', 'comment', 'user'];
 
         if (!in_array($model, $allowed)) {
             return new JsonResponse("Invalid comment parent", 400);
@@ -30,7 +31,18 @@ class BindCommentRoute
             return new JsonResponse('Commentable object not found', 404);
         }
 
-        $request->merge(['model' => $model, 'commentable_type' => $objStr, 'commentable_id' => $id, 'object' => $obj]);
+        if ($objStr == 'App\Models\Post') {
+            $ancType = $objStr;
+            $ancId = $id;
+        } else {
+            $ancType = $obj['ancestor_type'];
+            $ancId = $obj['ancestor_id'];
+        }
+
+        $request->merge([
+            'model' => $model, 'commentable_type' => $objStr, 'commentable_id' => $id, 'object' => $obj,
+            'ancestor_type' => $ancType, 'ancestor_id' => $ancId
+        ]);
         return $next($request);
     }
 }

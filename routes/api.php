@@ -30,7 +30,11 @@ Route::middleware('guard')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout',   [AuthController::class, 'logout']);
+    Route::get('permissions',   [AuthController::class, 'permissions']);
+    Route::get('/post/user/{user}', [PostController::class, 'userPosts']);
+
     Route::resource('/post', PostController::class)->except(['index', 'show']);
+
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
 

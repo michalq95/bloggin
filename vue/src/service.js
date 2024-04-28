@@ -53,6 +53,9 @@ export async function getTags() {
 export async function getUploads() {
     return makeRequest("get", "/upload");
 }
+export async function getMyPermissions() {
+    return makeRequest("get", "/permissions");
+}
 
 export async function getPost(id) {
     return makeRequest("get", `post/${id}`);

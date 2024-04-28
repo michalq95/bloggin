@@ -4,8 +4,8 @@ import axiosClient from "../axios";
 const store = createStore({
     state: {
         user: {
-            data: JSON.parse(sessionStorage.getItem("BLOG_USER")) || {},
-            token: sessionStorage.getItem("BLOG_TOKEN"),
+            data: JSON.parse(localStorage.getItem("BLOG_USER")) || {},
+            token: localStorage.getItem("BLOG_TOKEN"),
         },
         error: "",
     },
@@ -28,16 +28,16 @@ const store = createStore({
         logout: (state) => {
             state.user.data = {};
             state.user.token = null;
-            sessionStorage.removeItem("BLOG_TOKEN");
-            sessionStorage.removeItem("BLOG_USER");
+            localStorage.removeItem("BLOG_TOKEN");
+            localStorage.removeItem("BLOG_USER");
         },
         setUser: (state, { userData, token = null }) => {
             console.log(userData, token);
             state.user.data = userData;
-            sessionStorage.setItem("BLOG_USER", JSON.stringify(userData));
+            localStorage.setItem("BLOG_USER", JSON.stringify(userData));
             if (token) {
                 state.user.token = token;
-                sessionStorage.setItem("BLOG_TOKEN", token);
+                localStorage.setItem("BLOG_TOKEN", token);
             }
         },
     },

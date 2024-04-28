@@ -6,7 +6,7 @@
                     ? { 'max-width': '100%' }
                     : { 'max-width': `${width}px` },
             ]"
-            class="h-48 object-cover md:h-full"
+            class="object-cover h-full"
             :src="imageUrl"
             :alt="imageUrl"
         />

@@ -17,12 +17,16 @@
             <div class="flex font-bold text-slate-200">
                 {{ comment.title }} {{ comment.id }}
             </div>
-            <div class="flex">
-                <Avatar
-                    :image="comment.user.image?.url"
-                    :name="comment.user.name"
-                ></Avatar>
-                {{ comment.created_at }}
+            <div class="flex justify-center">
+                <router-link
+                    :to="{ name: 'Profile', params: { id: comment.user.id } }"
+                >
+                    <Avatar
+                        :image="comment.user.image?.url"
+                        :name="comment.user.name"
+                    ></Avatar>
+                </router-link>
+                <span>{{ comment.created_at }}</span>
             </div>
         </div>
         <div class="text-left p-2" v-html="comment.description"></div>

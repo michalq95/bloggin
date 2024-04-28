@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Traits\HasImages;
 use App\Traits\HasTags;
 use App\Traits\HasUploads;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
+    use CrudTrait;
     use HasFactory, HasImages, HasTags, SoftDeletes, HasUploads;
     protected $fillable = ['title', 'description', 'user_id'];
 
@@ -21,15 +23,15 @@ class Post extends Model
 
     protected static function booted()
     {
-        static::created((function (Post $post) {
+        static::created((function () {
             Cache::forget("posts");
         }));
 
-        static::updated((function (Post $post) {
+        static::updated((function () {
             Cache::forget("posts");
         }));
 
-        static::deleted((function (Post $post) {
+        static::deleted((function () {
             Cache::forget("posts");
         }));
 

@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 
@@ -71,6 +72,14 @@ class AuthController extends Controller
 
         return response([
             'success' => true
+        ]);
+    }
+
+    public function permissions()
+    {
+        $user = Auth::user();
+        return new JsonResource([
+            'permissions' => $user->getAllPermissions()->pluck('name')
         ]);
     }
 }

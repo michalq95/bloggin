@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Traits\HasImages;
 use App\Traits\HasTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,12 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
+    use CrudTrait;
     use HasFactory, SoftDeletes, HasTags, HasImages;
 
 
-    protected $fillable = ['title', 'description', 'user_id', 'commentable_type', 'commentable_id'];
+    protected $fillable = ['title', 'description', 'user_id', 'commentable_type', 'commentable_id', 'ancestor_type', 'ancestor_id'];
 
-    protected $with = ['comments', 'tags', 'image'];
+    protected $with = ['tags', 'image', 'comments'];
     public function user()
     {
         return $this->belongsTo(User::class, "user_id");
@@ -32,10 +34,6 @@ class Comment extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    public function commentable()
-    {
-        return $this->morphTo();
-    }
 
     public function comments()
     {

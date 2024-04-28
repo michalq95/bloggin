@@ -41,12 +41,11 @@
                     >{{ post.title }}</router-link
                 >
                 <div class="flex justify-between items-center">
-                    <img
+                    <ImageComponent
                         v-if="post.image"
-                        class="mx-4 w-64 object-cover rounded-sm hidden sm:block"
-                        :src="post.image.url"
-                        alt="avatar"
-                    />
+                        :imageUrl="post.image.url"
+                        :width="96"
+                    ></ImageComponent>
                     <span>
                         <div class="font-light text-gray-600">
                             {{ post.created_at }}
@@ -79,23 +78,14 @@
                         </router-link>
                         <div>{{ post.comments_count }} replies</div>
                     </div>
-                    <div class="flex items-center">
-                        <img
-                            v-if="post.user.image"
-                            class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
-                            :src="post.user.image"
-                            alt="avatar"
-                        />
-                        <img
-                            v-else
-                            class="mx-4 w-10 h-10 object-cover rounded-full hidden sm:block"
-                            src="../assets/placeholder.jpg"
-                            alt="placeholder_avatar"
-                        />
-                        <h1 class="text-gray-700 font-bold hover:underline">
-                            {{ post.user.name }}
-                        </h1>
-                    </div>
+                    <router-link
+                        :to="{ name: 'Profile', params: { id: post.user.id } }"
+                    >
+                        <Avatar
+                            :image="post.user.image?.url"
+                            :name="post.user.name"
+                        ></Avatar>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -109,6 +99,8 @@
 </template>
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import ImageComponent from "../components/ImageComponent.vue";
+import Avatar from "../components/Avatar.vue";
 import { getPosts } from "../service";
 import store from "../store";
 
@@ -136,7 +128,7 @@ watch(
 );
 async function search() {
     const data = await getPosts({
-        keyword: keywords.value.split(" ").join(","),
+        keyword: keywords.value.trim().split(" ").join(","),
     });
     posts.value = data.data;
     meta.value = data.meta;

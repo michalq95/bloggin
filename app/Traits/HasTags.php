@@ -21,8 +21,6 @@ trait HasTags
                 $tagIds[] = $tag->id;
             }
         }
-        // dd($tagIds);
-        // $this->tags()->sync($tagIds);
         return $tagIds;
     }
 }

@@ -20,6 +20,7 @@ class CommentResource extends JsonResource
             'description' => $this->description,
             'tags' => $this->tags->pluck("name"),
             'parent' => $this->commentable,
+            'ancestor' => $this->ancestor,
             'comments' => CommentsResource::collection($this->comments),
             'user' => new OtherUserResource($this->user),
             'image' => new ImageResource($this->latestImage),

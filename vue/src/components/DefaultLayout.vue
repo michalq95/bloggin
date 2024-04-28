@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full">
+    <div class="flex flex-col min-h-full">
         <header
             class="md:mb-8 py-4 px-4 bg-slate-400 dark:bg-slate-800 flex justify-between items-center select-none"
         >
@@ -17,12 +17,6 @@
                 >
                     Blog
                 </router-link>
-                <router-link
-                    :to="{ name: 'TipMe' }"
-                    class="py-2 px-3 ml-2 hover:bg-indigo-100 rounded"
-                >
-                    Tip Me
-                </router-link>
             </div>
             <div
                 v-if="token"
@@ -30,7 +24,7 @@
             ></div>
 
             <div class="flex-none pl-2">
-                <div class="text-gray-800 sm:block md:hidden">
+                <div class="text-gray-100 sm:block md:hidden">
                     <div @click="menuIsOpen = !menuIsOpen" v-show="!menuIsOpen">
                         <svg
                             class="fill-current w-8 cursor-pointer"
@@ -57,7 +51,7 @@
                 </div>
 
                 <div class="hidden md:block text-sm">
-                    <div></div>
+                    <!-- <div></div> -->
                     <div v-if="!token">
                         <router-link
                             :to="{ name: 'Login' }"
@@ -74,24 +68,21 @@
                         </router-link>
                     </div>
 
-                    <div v-else>
-                        <span class="py-2 px-3 ml-2 rounded">
+                    <div v-else class="flex">
+                        <!-- <span class="py-2 px-3 ml-2 rounded"> -->
+
+                        <!-- </span> -->
+                        <router-link :to="{ name: 'Profile' }">
                             <Avatar
-                                class="inline-flex"
+                                class="inline-block"
                                 :image="user.image?.url"
+                                :name="'Welcome ' + user.name + '!'"
                             />
-                            Welcome {{ user.name }}!
-                        </span>
-                        <router-link
-                            :to="{ name: 'Profile' }"
-                            class="py-2 px-3 ml-2 hover:bg-indigo-400 bg-indigo-500 rounded shadow-lg border text-white"
-                        >
-                            Profile
                         </router-link>
 
                         <span
                             @click="logout"
-                            class="py-2 px-3 ml-2 hover:bg-indigo-400 bg-indigo-500 rounded shadow-lg border text-white"
+                            class="cursor-pointer py-2 px-3 ml-2 hover:bg-indigo-400 bg-indigo-500 rounded shadow-lg border text-white"
                         >
                             Logout
                         </span>
@@ -109,32 +100,27 @@
             leave-to-class="transform opacity-0"
         >
             <div
-                class="bg-white px-4 py-4 select-none border-b md:hidden duration-200"
+                class="bg-slate-50 dark:bg-slate-600 px-4 py-4 select-none border-b md:hidden duration-200"
                 v-if="menuIsOpen"
             >
                 <router-link
                     :to="{ name: 'Blog' }"
-                    class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                    class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                 >
                     Blog
                 </router-link>
-                <router-link
-                    :to="{ name: 'TipMe' }"
-                    class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
-                >
-                    Tip Me
-                </router-link>
+
                 <div v-if="!token">
                     <router-link
                         :to="{ name: 'Login' }"
-                        class="block mb-2 font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                        class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                     >
                         Log In
                     </router-link>
 
                     <router-link
                         :to="{ name: 'Register' }"
-                        class="block font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                        class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                     >
                         Register
                     </router-link>
@@ -142,40 +128,52 @@
                 <div v-else>
                     <router-link
                         :to="{ name: 'Profile' }"
-                        class="block font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                        class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                     >
                         Profile
                     </router-link>
                     <div
-                        class="block font-semibold text-gray-800 py-2 px-3 rounded"
+                        class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                     >
-                        <Avatar class="inline-block" :image="user.image?.url" />
-                        Welcome {{ user.name }}!
+                        <router-link :to="{ name: 'Profile' }">
+                            <Avatar
+                                class="inline-block"
+                                :image="user.image?.url"
+                                :name="'Welcome ' + user.name + '!'"
+                            />
+                        </router-link>
                     </div>
 
                     <div
                         @click="logout"
-                        class="block font-semibold text-gray-800 py-2 px-3 hover:bg-gray-200 rounded cursor-pointer"
+                        class="block mb-2 font-semibold text-gray-800 dark:text-slate-400 py-2 px-3 hover:bg-gray-200 hover:dark:bg-slate-700 rounded cursor-pointer"
                     >
                         Logout
                     </div>
                 </div>
             </div>
         </Transition>
-
-        <div v-if="$store.state.error404">404 not found</div>
-        <router-view :key="$route.fullPath" v-else></router-view>
-        <footer
-            class="md:mb-8 py-4 px-4 bg-slate-400 dark:bg-slate-800 flex justify-between items-center select-none"
-        >
-            <button
-                class="text-slate-900 dark:text-slate-200"
-                @click="toggleDark()"
-            >
-                Toggle Color Mode
-            </button>
-        </footer>
+        <div class="text-center">
+            <div v-if="$store.state.error404">404 not found</div>
+            <router-view class="" :key="$route.fullPath" v-else></router-view>
+        </div>
     </div>
+    <footer
+        class="bottom-0 my-6 py-4 px-4 bg-slate-400 dark:bg-slate-800 flex justify-between items-center select-none"
+    >
+        <button
+            class="text-slate-900 dark:text-slate-200"
+            @click="toggleDark()"
+        >
+            Toggle Color Mode
+        </button>
+        <router-link
+            :to="{ name: 'TipMe' }"
+            class="text-slate-900 dark:text-slate-200"
+        >
+            Tip Me
+        </router-link>
+    </footer>
 </template>
 
 <script setup>

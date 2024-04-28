@@ -9,8 +9,7 @@ class CommentsResource extends JsonResource
 {
     public function toArray($request)
     {
-        $comments = $this->comments()->orderBy('created_at', 'desc')->simplePaginate(3);
-        // $comments = $this->comments()->with(["tags", "latestImage"])->orderBy('created_at', 'desc')->simplePaginate(3);
+        $comments = $this->comments()->with('comments')->orderBy('created_at', 'desc')->simplePaginate(3);
 
         return [
             'id' => $this->id,
@@ -23,8 +22,8 @@ class CommentsResource extends JsonResource
                 'has_next_page' => $comments->hasMorePages(),
                 'model' => $request->model,
             ],
-            'user' => new OtherUserResource($this->user),
-            'image' => new ImageResource($this->latestImage),
+            'user' => $this->user, // new OtherUserResource($this->user),
+            'image' => new ImageResource($this->whenLoaded('latestImage')),
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
         ];

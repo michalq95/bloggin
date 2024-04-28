@@ -34,7 +34,6 @@ class BindCommentRouteTest extends TestCase
 
         $post->shouldReceive('find')->with(1)->andReturn(new \stdClass());
 
-        // $request->shouldReceive('merge')->with(['commentable_type' => 'App\\Models\\Post', 'commentable_id' => 1]);
         $object = new \stdClass();
         $request->shouldReceive('merge')->with(
             [

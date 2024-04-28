@@ -310,6 +310,7 @@ function addContentBlock() {
 }
 
 function removeContentBlock(content) {
+    active.value = 0;
     contentBlocks.value = contentBlocks.value.filter((el) => el.id !== content);
 }
 

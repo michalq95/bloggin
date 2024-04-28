@@ -29,6 +29,8 @@ class StoreCommentRequest extends FormRequest
             'title' => 'required|string|max:255',
             'commentable_type' => 'required',
             'commentable_id' => 'required',
+            'ancestor_type' => 'required',
+            'ancestor_id' => 'required',
             'description' => 'nullable|string',
             "image" => 'nullable',
             'image.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2000',

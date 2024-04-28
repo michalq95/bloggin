@@ -2,10 +2,10 @@
     <div v-if="!post">Loading...</div>
     <div
         v-else
-        class="max-w-5xl px-10 py-6 dark:bg-slate-600 rounded-lg shadow-md"
+        class="max-w-5xl px-10 py-6 bg-slate-400 dark:bg-slate-600 rounded-lg shadow-md"
     >
         <div class="flex justify-between items-center">
-            <span class="font-light text-gray-800">{{ post.created_at }}</span>
+            <span class="font-light text-gray-900">{{ post.created_at }}</span>
             <div
                 v-if="post.tags && post.tags.length > 0"
                 class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
@@ -34,10 +34,10 @@
             </h2>
 
             <div
-                class="m-4 text-gray-600 dark:text-gray-300 text-left"
+                class="m-4 text-gray-800 dark:text-gray-300 text-left"
                 v-html="post.description"
             ></div>
-            <article class="m-4 text-gray-600 dark:text-gray-300 text-left">
+            <article class="m-4 text-gray-800 dark:text-gray-300 text-left">
                 <div v-for="content in post.content">
                     <div v-if="content.text" v-html="content.text"></div>
                     <div
@@ -49,7 +49,7 @@
                             :width="96"
                         ></ImageComponent>
                         <div
-                            class="my-1 cursor-pointer text-teal-200"
+                            class="my-1 cursor-pointer text-teal-700 dark:text-teal-200"
                             @click="downloadFile(content.upload.id)"
                         >
                             Download
@@ -97,10 +97,14 @@
                     >updated:{{ post.updated_at }}</span
                 ></span
             >
-            <Avatar
-                :image="post.user.image?.url"
-                :name="post.user.name"
-            ></Avatar>
+            <router-link
+                :to="{ name: 'Profile', params: { id: post.user.id } }"
+            >
+                <Avatar
+                    :image="post.user.image?.url"
+                    :name="post.user.name"
+                ></Avatar>
+            </router-link>
             <div>
                 <!-- <a class="flex items-center" href="#">
                     <img
@@ -121,8 +125,10 @@
                 </a> -->
             </div>
         </div>
-        <div class="rounded-md p-2 dark:bg-slate-700 bg-sky-300">
-            <strong class="text-left text-white m-3">Comments</strong>
+        <div class="rounded-md p-2 dark:bg-slate-700 bg-slate-300">
+            <strong class="text-left text-slate-800 dark:text-slate-200 m-3"
+                >Comments</strong
+            >
             <div class="flex justify-between items-center p-2">
                 <button
                     v-if="isLoggedIn"
@@ -144,7 +150,9 @@
                 v-for="comment in post.comments"
                 :comment="comment"
             ></Comment>
-            <div class="text-left" v-else>No comments so far</div>
+            <div class="text-left text-slate-800 dark:text-slate-200" v-else>
+                No comments so far
+            </div>
             <button
                 v-if="post.comments_meta.has_next_page"
                 class="mt-1 focus:ring-indigo-500 w-1/6 py-3 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 dark:bg-slate-800"

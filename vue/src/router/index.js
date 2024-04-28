@@ -12,6 +12,8 @@ import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
 import store from "../store";
 
+import { getMyPermissions } from "../service";
+
 const routes = [
     {
         path: "/auth",
@@ -61,7 +63,7 @@ const routes = [
         meta: { requiresAuth: true, requiresPermission: "create post" },
     },
     {
-        path: "/profile",
+        path: "/profile/:id?",
         name: "Profile",
         component: Profile,
         meta: { requiresAuth: true },
@@ -71,17 +73,21 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-router.beforeEach((to, from, next) => {
+
+router.beforeEach(async (to, from, next) => {
     if (to.name != "NotFound") store.commit("set404Error", false);
     if (to.meta.requiresAuth && !store.state.user.token) {
         next({ name: "Login" });
-    } else if (
-        to.meta.requiresPermission &&
-        !store.getters.getPermissions.includes(to.meta.requiresPermission)
-    ) {
-        next({ name: "NotAuthorized" });
     } else if (store.state.user.token && to.meta.isGuest) {
         next({ name: "Home" });
+    } else if (to.meta.requiresPermission) {
+        const permissions = await getMyPermissions();
+        if (
+            !permissions.data.permissions.includes(to.meta.requiresPermission)
+        ) {
+            next({ name: "NotAuthorized" });
+        }
+        next();
     } else {
         next();
     }

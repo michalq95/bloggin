@@ -7,9 +7,11 @@ use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentsResource;
+use App\Http\Resources\UserCommentsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Post;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommentController extends Controller
 {
@@ -20,7 +22,10 @@ class CommentController extends Controller
 
     public function index(Request $request)
     {
-        // $comments = $request->object->comments()->orderBy('created_at', 'desc')->simplePaginate(3);
+        if ($request['model'] == 'user') {
+            return  UserCommentsResource::collection($request['object']->comments()->with(['image', 'tags'])->orderBy('created_at', 'desc')->simplePaginate(3));
+        }
+
         return new CommentsResource($request->object);
     }
     public function store(StoreCommentRequest $request)

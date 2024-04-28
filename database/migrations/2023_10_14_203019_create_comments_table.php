@@ -22,10 +22,14 @@ return new class extends Migration
             $table->unsignedBigInteger('commentable_id');
             $table->string('commentable_type');
 
+            $table->unsignedBigInteger('ancestor_id');
+            $table->string('ancestor_type');
+
             $table->timestamps();
             $table->softDeletes();
 
             $table->index(['commentable_id', 'commentable_type']);
+            $table->index(['ancestor_id', 'ancestor_type']);
         });
     }
 
