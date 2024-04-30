@@ -28,6 +28,12 @@ class Post extends Model
     {
         static::created((function (Post $post) {
             Cache::forget("posts");
+            Vote::create([
+                'user_id' => $post->user_id,
+                'voteable_type' => 'App\Models\Post',
+                'voteable_id' => $post->id,
+                'vote' => 1
+            ]);
             Score::create(['scoreable_id' => $post->id, 'scoreable_type' => 'App\Models\Post', 'score' => 1]);
         }));
 

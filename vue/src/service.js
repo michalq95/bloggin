@@ -88,6 +88,10 @@ export async function deleteUpload(id) {
 export async function saveUserImage({ formData } = {}) {
     return makeRequest("post", "image", formData);
 }
+export async function vote({ model, id, vote } = {}) {
+    const url = `${model}/${id}/vote`;
+    return makeRequest("post", url, { vote });
+}
 export async function downloadUploadedFile(id) {
     try {
         const res = await axiosClient.get(`upload/${id}`, {

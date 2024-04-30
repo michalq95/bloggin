@@ -1,57 +1,69 @@
 <template>
     <div class="rounded-sm ml-4 border-solid border-white border-2">
-        <div class="flex justify-between items-center p-2">
-            <div class="flex">
-                <!-- <img
+        <div class="flex content-center">
+            <ScoreComponent
+                :score="comment.score"
+                :id="comment.id"
+                :type="'comment'"
+                :myVote="comment.vote?.vote"
+                @voteOnElement="elementVoted"
+            />
+            <div class="flex flex-col justify-between p-2 grow">
+                <div class="flex">
+                    <!-- <img
                     v-if="comment.image"
                     :src="comment.image.url"
                     class="w-20 object-cover"
                 /> -->
-                <ImageComponent
-                    v-if="comment.image"
-                    :imageUrl="comment.image.url"
-                    :width="80"
-                ></ImageComponent>
-                <div class="w-16" v-else></div>
-            </div>
-            <div class="flex font-bold text-slate-200">
-                {{ comment.title }} {{ comment.id }}
-            </div>
-            <div class="flex justify-center">
-                <router-link
-                    :to="{ name: 'Profile', params: { id: comment.user.id } }"
-                >
-                    <Avatar
-                        :image="comment.user.image?.url"
-                        :name="comment.user.name"
-                    ></Avatar>
-                </router-link>
-                <span>{{ comment.created_at }}</span>
-            </div>
-        </div>
-        <div class="text-left p-2" v-html="comment.description"></div>
+                    <ImageComponent
+                        v-if="comment.image"
+                        :imageUrl="comment.image.url"
+                        :width="80"
+                    ></ImageComponent>
+                    <div class="w-16" v-else></div>
+                </div>
+                <div class="flex font-bold justify-center text-slate-200">
+                    {{ comment.title }} {{ comment.id }}
+                </div>
+                <div class="flex justify-between">
+                    <router-link
+                        :to="{
+                            name: 'Profile',
+                            params: { id: comment.user.id },
+                        }"
+                    >
+                        <Avatar
+                            :image="comment.user.image?.url"
+                            :name="comment.user.name"
+                        ></Avatar>
+                    </router-link>
+                    <span>{{ comment.created_at }}</span>
+                </div>
+                <div class="text-left p-2" v-html="comment.description"></div>
 
-        <div class="flex justify-between items-center p-2">
-            <button
-                v-if="isLoggedIn"
-                class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
-                @click="switchReplying"
-            >
-                Reply
-            </button>
+                <div class="flex justify-between items-center p-2">
+                    <button
+                        v-if="isLoggedIn"
+                        class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
+                        @click="switchReplying"
+                    >
+                        Reply
+                    </button>
 
-            <button
-                v-if="
-                    isLoggedIn &&
-                    comment &&
-                    comment.user &&
-                    comment.user.id == store.state.user.data.id
-                "
-                class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
-                @click="switchEditing"
-            >
-                Edit
-            </button>
+                    <button
+                        v-if="
+                            isLoggedIn &&
+                            comment &&
+                            comment.user &&
+                            comment.user.id == store.state.user.data.id
+                        "
+                        class="flex mt-1 focus:ring-indigo-500 p-3 focus:border-indigo-500 text-center shadow-sm sm:text-sm border-gray-300 rounded-r-md text-slate-100 bg-slate-800"
+                        @click="switchEditing"
+                    >
+                        Edit
+                    </button>
+                </div>
+            </div>
         </div>
         <NewComment
             v-if="replying || editing"
@@ -90,6 +102,7 @@ import { getMoreComments } from "../service";
 import NewComment from "./NewComment.vue";
 import ImageComponent from "./ImageComponent.vue";
 import Avatar from "../components/Avatar.vue";
+import ScoreComponent from "./ScoreComponent.vue";
 
 const emit = defineEmits(["alterCommentInParent"]);
 
@@ -120,7 +133,11 @@ function addNewlyAddedComment(data) {
     data = data.data;
     props.comment.comments.unshift({ ...data, parent: undefined });
 }
-
+function elementVoted(data) {
+    props.comment.score = data.score;
+    props.comment.vote = props.comment.vote || {};
+    props.comment.vote.vote = data.value;
+}
 function alterComment(data) {
     data = data.data;
     props.comment.description = data.description;

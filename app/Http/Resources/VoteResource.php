@@ -10,12 +10,10 @@ class VoteResource extends JsonResource
     public function toArray($request)
 
     {
-        dd($this);
         return [
-            // 'scoreable_type' => $this->scoreable_type,
-            // 'scoreable_id' => $this->scoreable_id,
-            // 'score' => $this->score
-            $this
+            // 'voteable_id' => $this->voteable_id,
+            // 'voteable_type' => $this->voteable_type,
+            'vote' =>  $this->vote
         ];
     }
 }

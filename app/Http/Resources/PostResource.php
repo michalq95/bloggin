@@ -31,9 +31,8 @@ class PostResource extends JsonResource
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
             'score' => $this->score ?  $this->score->score : 0,
-            'vote' => $this->when($userId, function () use ($userId) {
-                return $this->votes()->where('user_id', $userId)->first();
-            })
+            'vote' => new VoteResource($this->currentUserVote())
+
         ];
     }
 }

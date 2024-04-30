@@ -41,6 +41,8 @@
                     :score="post.score"
                     :id="post.id"
                     :type="'post'"
+                    :myVote="post.vote?.vote"
+                    @voteOnElement="elementVoted"
                 />
                 <div class="grow">
                     <router-link
@@ -110,10 +112,11 @@
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
         ></v-pagination>
+        {{ posts[0] }}
     </div>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, reactive } from "vue";
 import ImageComponent from "../components/ImageComponent.vue";
 import ScoreComponent from "../components/ScoreComponent.vue";
 import Avatar from "../components/Avatar.vue";
@@ -129,6 +132,12 @@ onMounted(async () => {
     posts.value = data.data;
     meta.value = data.meta;
 });
+function elementVoted(data) {
+    const post = posts.value.find((el) => el.id == data.scoreable_id);
+    post.score = data.score;
+    post.vote = reactive(post.vote || {});
+    post.vote.vote = data.value;
+}
 watch(
     () => meta.value.current_page,
     async (currentPage, old) => {
