@@ -8,6 +8,7 @@ const store = createStore({
             token: localStorage.getItem("BLOG_TOKEN"),
         },
         error: "",
+        modal: "",
     },
     getters: {
         isLoggedIn(state) {
@@ -15,6 +16,9 @@ const store = createStore({
         },
         getPermissions(state) {
             return state.user.data.permissions ?? [];
+        },
+        getModal(state) {
+            return state.modal;
         },
     },
     actions: {},
@@ -32,13 +36,15 @@ const store = createStore({
             localStorage.removeItem("BLOG_USER");
         },
         setUser: (state, { userData, token = null }) => {
-            console.log(userData, token);
             state.user.data = userData;
             localStorage.setItem("BLOG_USER", JSON.stringify(userData));
             if (token) {
                 state.user.token = token;
                 localStorage.setItem("BLOG_TOKEN", token);
             }
+        },
+        setModal: (state, modalType) => {
+            state.modal = modalType;
         },
     },
     modules: {},

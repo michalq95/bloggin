@@ -91,6 +91,11 @@ export async function saveUserImage({ formData } = {}) {
 export async function vote({ model, id, vote } = {}) {
     const url = `${model}/${id}/vote`;
     return makeRequest("post", url, { vote });
+    // return new Promise((resolve) => {
+    //     setTimeout(() => {
+    //         resolve();
+    //     }, 1000);
+    // });
 }
 export async function downloadUploadedFile(id) {
     try {

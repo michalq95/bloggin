@@ -156,6 +156,7 @@
         <div class="text-center">
             <div v-if="$store.state.error404">404 not found</div>
             <router-view class="" :key="$route.fullPath" v-else></router-view>
+            <GoRegisterModal v-if="modal" :modal="modal"></GoRegisterModal>
         </div>
     </div>
     <footer
@@ -182,6 +183,7 @@ import { useDark, useToggle } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { logout as logoutService } from "../service";
+import GoRegisterModal from "../views/GoRegisterModal.vue";
 import Avatar from "./Avatar.vue";
 
 const menuIsOpen = ref(false);
@@ -190,6 +192,7 @@ const store = useStore();
 const router = useRouter();
 const user = computed(() => store.state.user.data);
 const token = computed(() => store.state.user.token);
+const modal = computed(() => store.state.modal);
 
 const isDark = useDark();
 const toggleDark = useToggle(isDark);

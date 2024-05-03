@@ -161,7 +161,6 @@ async function search() {
 }
 
 function addTag(tag) {
-    if (!keywords.value.split(" ").includes((el) => el == tag))
-        keywords.value += ` ${tag}`;
+    if (!keywords.value.split(" ").includes(tag)) keywords.value += ` ${tag}`;
 }
 </script>
