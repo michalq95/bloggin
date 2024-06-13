@@ -10,7 +10,7 @@
             <img
                 v-else
                 class="mx-4 w-8 h-8 object-cover rounded-full hidden sm:block"
-                src="../assets/placeholder.jpg"
+                src="@/assets/placeholder.jpg"
                 alt="placeholder_avatar"
             />
             <h1 v-if="props.name">

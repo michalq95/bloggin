@@ -41,7 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/post', PostController::class)->except(['index', 'show']);
 
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
-    Route::post('/{model}/{id}/vote', [VoteController::class, 'store'])->middleware(BindVotableRoute::class);
+    Route::post('/{model}/{id}/vote', VoteController::class)->middleware(BindVotableRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
 
     Route::resource('/upload', UploadsController::class)->only(['store', 'index']);

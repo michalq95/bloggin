@@ -117,11 +117,11 @@
 </template>
 <script setup>
 import { ref, onMounted, watch, reactive } from "vue";
-import ImageComponent from "../components/ImageComponent.vue";
-import ScoreComponent from "../components/ScoreComponent.vue";
-import Avatar from "../components/Avatar.vue";
-import { getPosts } from "../service";
-import store from "../store";
+import ImageComponent from "@/components/ImageComponent.vue";
+import ScoreComponent from "@/components/ScoreComponent.vue";
+import Avatar from "@/components/Avatar.vue";
+import { getPosts } from "@/service";
+import store from "@/store";
 
 const posts = ref([]);
 const meta = ref({});

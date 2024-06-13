@@ -106,9 +106,9 @@
 </template>
 
 <script setup>
-import store from "../store";
+import store from "@/store";
 import { useRouter } from "vue-router";
-import { register as registerService } from "../service";
+import { register as registerService } from "@/service";
 
 const router = useRouter();
 const user = {
@@ -120,8 +120,9 @@ const user = {
 
 async function register() {
     const data = await registerService(user);
+    console.log(data);
     if (data) {
-        store.commit("setUser", data);
+        store.commit("setUser", { userData: data.user, token: data.token });
         router.push({ name: "Home" });
     }
 }

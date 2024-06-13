@@ -10,7 +10,7 @@
             />
             <img
                 v-else
-                src="../assets/placeholder.jpg"
+                src="@/assets/placeholder.jpg"
                 class="w-8 object-cover"
             />
         </div>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import store from "../store";
+import store from "@/store";
 import Avatar from "./Avatar.vue";
 import { computed, ref } from "vue";
 

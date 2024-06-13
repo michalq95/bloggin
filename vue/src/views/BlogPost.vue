@@ -14,23 +14,25 @@
             />
 
             <div class="flex justify-between items-center grow">
-                <span class="font-light text-gray-900">{{
-                    post.created_at
-                }}</span>
-                <div
-                    v-if="post.tags && post.tags.length > 0"
-                    class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
-                >
-                    <button
-                        v-for="tag in post.tags"
-                        :key="tag"
-                        class="hover:bg-gray-500 mx-1 px-1"
-                        href="#"
+                <div class="grow-0">
+                    <span class="font-light text-gray-900">{{
+                        post.created_at
+                    }}</span>
+                    <div
+                        v-if="post.tags && post.tags.length > 0"
+                        class="flex flex-col px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
                     >
-                        {{ tag }}
-                    </button>
+                        <button
+                            v-for="tag in post.tags"
+                            :key="tag"
+                            class="hover:bg-gray-500 mx-1 px-1"
+                            href="#"
+                        >
+                            {{ tag }}
+                        </button>
+                    </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2 grow">
                     <div class="flex">
                         <ImageComponent
                             v-if="post.image[0]"
@@ -102,7 +104,7 @@
                                 <img
                                     v-else
                                     class="h-12 w-12 rounded-lg object-cover"
-                                    src="../assets/placeholder.jpg"
+                                    src="@/assets/placeholder.jpg"
                                     alt="placeholder_avatar"
                                 />
                                 {{ upload.filename }}
@@ -170,14 +172,14 @@
 <script setup>
 import { ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { useHumanReadableFileSize } from "../composables/readableFileSize";
-import { getPost, getMoreComments, downloadUploadedFile } from "../service";
-import store from "../store";
-import ImageComponent from "../components/ImageComponent.vue";
-import Comment from "../components/Comment.vue";
-import NewComment from "../components/NewComment.vue";
-import Avatar from "../components/Avatar.vue";
-import ScoreComponent from "../components/ScoreComponent.vue";
+import { useHumanReadableFileSize } from "@/composables/readableFileSize";
+import { getPost, getMoreComments, downloadUploadedFile } from "@/service";
+import store from "@/store";
+import ImageComponent from "@/components/ImageComponent.vue";
+import Comment from "@/components/Comment.vue";
+import NewComment from "@/components/NewComment.vue";
+import Avatar from "@/components/Avatar.vue";
+import ScoreComponent from "@/components/ScoreComponent.vue";
 
 const route = useRoute();
 

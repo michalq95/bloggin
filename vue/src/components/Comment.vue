@@ -96,12 +96,12 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import store from "../store";
+import store from "@/store";
 
-import { getMoreComments } from "../service";
+import { getMoreComments } from "@/service";
 import NewComment from "./NewComment.vue";
 import ImageComponent from "./ImageComponent.vue";
-import Avatar from "../components/Avatar.vue";
+import Avatar from "@/components/Avatar.vue";
 import ScoreComponent from "./ScoreComponent.vue";
 
 const emit = defineEmits(["alterCommentInParent"]);

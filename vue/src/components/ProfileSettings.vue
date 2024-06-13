@@ -54,7 +54,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
-import { saveUserImage } from "../service";
+import { saveUserImage } from "@/service";
 
 const store = useStore();
 const user = computed(() => store.state.user.data);
@@ -73,7 +73,6 @@ async function confirm() {
         formData.append("image[]", model.value.image);
 
         const user = await saveUserImage({ formData });
-        console.log(user.data);
         if (user) {
             store.commit("setUser", { userData: user.data });
         }

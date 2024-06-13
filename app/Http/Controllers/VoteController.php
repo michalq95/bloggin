@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class VoteController extends Controller
 {
 
-    public function store(VoteRequest $request)
+    public function __invoke(VoteRequest $request)
     {
         $score = $request->object['score'];
         if (!$score) {

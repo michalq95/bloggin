@@ -27,7 +27,7 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { vote } from "../service";
+import { vote } from "@/service";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -42,7 +42,6 @@ const props = defineProps({
 const optimisticVote = ref(null);
 const optimisticScore = ref(null);
 function displayModal() {
-    console.log(isLoggedIn.value);
     if (isLoggedIn.value) return;
     store.commit("setModal", "goRegister");
 }

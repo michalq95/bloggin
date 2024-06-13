@@ -74,10 +74,10 @@
     </div>
 </template>
 <script setup>
-import store from "../store";
+import store from "@/store";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { login as loginService } from "../service";
+import { login as loginService } from "@/service";
 
 const router = useRouter();
 const user = ref({
@@ -87,7 +87,6 @@ const user = ref({
 
 async function login() {
     const data = await loginService(user.value);
-    console.log(data.token);
     if (data) {
         store.commit("setUser", { userData: data.user, token: data.token });
         router.push({ name: "Home" });

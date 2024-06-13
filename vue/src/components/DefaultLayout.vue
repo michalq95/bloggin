@@ -182,8 +182,8 @@ import { useStore } from "vuex";
 import { useDark, useToggle } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { logout as logoutService } from "../service";
-import GoRegisterModal from "../views/GoRegisterModal.vue";
+import { logout as logoutService } from "@/service";
+import GoRegisterModal from "@/views/GoRegisterModal.vue";
 import Avatar from "./Avatar.vue";
 
 const menuIsOpen = ref(false);
