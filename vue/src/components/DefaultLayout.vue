@@ -174,6 +174,12 @@
         >
             Tip Me
         </router-link>
+        <router-link
+            :to="{ name: 'Image' }"
+            class="text-slate-900 dark:text-slate-200"
+        >
+            Random
+        </router-link>
     </footer>
 </template>
 
