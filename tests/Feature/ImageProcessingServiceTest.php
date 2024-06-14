@@ -19,12 +19,10 @@ class ImageProcessingServiceTest extends TestCase
     public function testCreateMiniature()
     {
         $imageMock = Mockery::mock(Image\Image::class);
-        // $imageMock = Mockery::mock("alias:" . Image::class);
         $imageMock->shouldReceive('width')->andReturn(600);
         $imageMock->shouldReceive('height')->andReturn(300);
         $imageMock->shouldNotReceive('resize')->once()->with(300, 300, Mockery::type('Closure'));
-        // $imageMock->extension = 'png';
-        // $imageMock->shouldReceive('getExtension')->andReturn('png');
+
         $imageMock->shouldReceive('setAttribute')->with('extension', 'png');
         $imageMock->shouldReceive('getAttribute')->with('extension')->andReturn('png');
 

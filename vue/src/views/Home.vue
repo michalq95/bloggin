@@ -6,7 +6,7 @@
                     <h1
                         class="text-2xl md:text-3xl mb-8 mt-16 font-serif max-w-3xl mx-auto"
                     >
-                        Title
+                        BlogPage
                     </h1>
 
                     <div
