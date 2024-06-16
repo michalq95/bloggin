@@ -2,14 +2,6 @@ import { mount } from "@vue/test-utils";
 import Home from "@/views/Home.vue";
 import { createStore } from "vuex";
 
-const mockRoute = {
-    params: {
-        id: 1,
-    },
-};
-const mockRouter = {
-    push: jest.fn(),
-};
 const mockStore = createStore({
     state: {
         user: {
@@ -19,19 +11,28 @@ const mockStore = createStore({
         },
     },
 });
-
-test("renders a homePage", () => {
+describe("HomePage", () => {
     const wrapper = mount(Home, {
+        shallow: true,
         global: {
             plugins: [mockStore],
             mocks: {
-                $route: mockRoute,
-                $router: mockRouter,
+                $route: {},
+                $router: {},
             },
+            // stubs: ["router-link"],
         },
     });
+    test("renders a homePage", () => {
+        const homeTitle = wrapper.get("h1");
 
-    const homeTitle = wrapper.get("h1");
+        expect(homeTitle.text()).toBe("BlogPage");
+        expect(homeTitle.text()).not.toBe("BlogPagea");
 
-    expect(homeTitle.text()).toBe("BlogPage");
+        const p = wrapper.get("p");
+        expect(p.text()).toMatch(/Description for few sentences./);
+
+        const routerLink = wrapper.get("router-link");
+        expect(routerLink.text()).toMatch(/Get Started/);
+    });
 });

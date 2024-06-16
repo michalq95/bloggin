@@ -23,7 +23,6 @@ class VoteController extends Controller
         $data = $request->validated();
         $vote = Vote::where('user_id', $data['user_id'])->where('voteable_type', $data['voteable_type'])->where('voteable_id', $data['voteable_id'])->first();
         if ($vote) {
-
             if ($vote['vote'] == $data['vote'])  return new ScoreResource($score);
             $newScoreValue = -$vote['vote'] + $data['vote'];
             $vote->update($data);

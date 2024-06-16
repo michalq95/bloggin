@@ -7,7 +7,7 @@ jest.mock("@/service", () => ({
     getRandomImage: jest.fn(),
 }));
 
-describe("Component.vue", () => {
+describe("RandomImage.vue", () => {
     it("renders the image and answer correctly", async () => {
         const mockData = {
             data: {
@@ -17,7 +17,7 @@ describe("Component.vue", () => {
         };
         getRandomImage.mockResolvedValue(mockData);
 
-        const wrapper = mount(ImageComponent);
+        const wrapper = mount(ImageComponent, { stubs: ["router-link"] });
 
         expect(getRandomImage).toHaveBeenCalled();
         await flushPromises();

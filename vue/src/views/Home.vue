@@ -27,6 +27,7 @@
                         >
 
                         <router-link
+                            id="get-started"
                             :to="user ? { name: 'Blog' } : { name: 'Register' }"
                             class="py-2 px-4 md:py-4 md:px-6 border select-none hover:bg-gray-100 bg-white rounded shadow-lg text-indigo-800"
                         >
