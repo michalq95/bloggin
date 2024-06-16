@@ -33,7 +33,11 @@ class CommentControllerTest extends TestCase
     public function test_can_obtain_comments(): void
     {
 
-        $comment = Comment::factory(['title' => 'test title', 'commentable_id' => $this->postId])->count(1)->create();
+        $comment = Comment::factory([
+            'title' => 'test title',
+            'commentable_id' => $this->postId,
+            'ancestor_id' => $this->postId, 'ancestor_type' => 'App\Models\Post'
+        ])->count(1)->create();
         $commentable_id = $comment[0]->commentable_id;
 
         $response = $this->get("/api/post/" . $commentable_id . "/comment");
@@ -66,7 +70,9 @@ class CommentControllerTest extends TestCase
         $comment = Comment::factory([
             'title' => 'test title',
             'description' => 'test description',
-            'commentable_id' => $this->postId
+            'commentable_id' => $this->postId,
+            'ancestor_id' => $this->postId, 'ancestor_type' => 'App\Models\Post'
+
         ])->count(1)->create();
         $commentData = [
             'description' => 'changed description'
@@ -85,7 +91,9 @@ class CommentControllerTest extends TestCase
     {
         $comment = Comment::factory([
             'title' => 'comment to delete',
-            'commentable_id' => $this->postId
+            'commentable_id' => $this->postId,
+            'ancestor_id' => $this->postId, 'ancestor_type' => 'App\Models\Post'
+
         ])->count(1)->create();
 
         $response = $this->delete('/api/comment/' . $comment[0]->id);

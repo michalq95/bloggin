@@ -75,4 +75,23 @@ class Post extends Model
     {
         return $this->MorphOne(Score::class, 'scoreable');
     }
+
+    public function scopeWithVotesByUser($query, $userId)
+    {
+        return $query->with(['votes' => function ($query) use ($userId) {
+            $query->where('user_id', $userId)->first();
+        }]);
+    }
+    public function scopeFilterByKeywords($query, $keywords)
+    {
+        $keywordsArray = explode(",", $keywords);
+        return $query->where(function ($query) use ($keywordsArray) {
+            foreach ($keywordsArray as $keyword) {
+                $query->where('title', 'LIKE', "%$keyword%")
+                    ->orWhereHas('tags', function ($query) use ($keyword) {
+                        $query->where('name', 'LIKE', "%$keyword%");
+                    });
+            }
+        });
+    }
 }

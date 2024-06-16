@@ -28,10 +28,7 @@ class PostController extends Controller
         $page = $request->input("page", 1);
         $query = Post::with(["tags",  "user", "oldestImage"]);
         if (auth('sanctum')->check()) {
-            $userId = auth('sanctum')->id();
-            $query->with(['votes' => function ($query) use ($userId) {
-                $query->where('user_id', $userId)->first();
-            }]);
+            $query->withVotesByUser(auth('sanctum')->id());
         }
         if ($keywords) {
             $keywords = explode(",", $keywords);
@@ -53,7 +50,6 @@ class PostController extends Controller
             //     return $query->withCount('comments')->orderBy('created_at', 'desc')->paginate(10);
             // });
         }
-        // dd($posts);
         return PostsResource::collection($posts);
     }
 
