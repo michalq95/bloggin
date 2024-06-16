@@ -88,7 +88,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-import { saveComment, putComment } from "../service";
+import { saveComment, putComment } from "@/service";
 const emit = defineEmits(["close", "newComment", "alteredComment"]);
 const props = defineProps({
     parentId: Number,
@@ -158,7 +158,6 @@ async function editComment() {
 }
 
 function onImageChoose(ev) {
-    console.log(ev);
     newCommentModel.value.image = ev.target.files[0];
     image.value = URL.createObjectURL(ev.target.files[0]);
 }

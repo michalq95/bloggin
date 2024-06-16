@@ -16,9 +16,9 @@
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import Panel from "../components/Panel.vue";
-import ProfileSettings from "../components/ProfileSettings.vue";
-import { getMoreComments } from "../service";
+import Panel from "@/components/Panel.vue";
+import ProfileSettings from "@/components/ProfileSettings.vue";
+import { getMoreComments } from "@/service";
 
 const route = useRoute();
 const router = useRouter();
@@ -32,9 +32,6 @@ const comments = ref({
     data: [],
 });
 
-console.log(user);
-console.log(user.value);
-console.log(user.value.id);
 onMounted(async () => {
     const id = route.params.id || user.value.id;
 

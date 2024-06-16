@@ -6,7 +6,7 @@
                     <h1
                         class="text-2xl md:text-3xl mb-8 mt-16 font-serif max-w-3xl mx-auto"
                     >
-                        Title
+                        BlogPage
                     </h1>
 
                     <div
@@ -27,6 +27,7 @@
                         >
 
                         <router-link
+                            id="get-started"
                             :to="user ? { name: 'Blog' } : { name: 'Register' }"
                             class="py-2 px-4 md:py-4 md:px-6 border select-none hover:bg-gray-100 bg-white rounded shadow-lg text-indigo-800"
                         >

@@ -28,6 +28,12 @@ class Post extends Model
     {
         static::created((function (Post $post) {
             Cache::forget("posts");
+            Vote::create([
+                'user_id' => $post->user_id,
+                'voteable_type' => 'App\Models\Post',
+                'voteable_id' => $post->id,
+                'vote' => 1
+            ]);
             Score::create(['scoreable_id' => $post->id, 'scoreable_type' => 'App\Models\Post', 'score' => 1]);
         }));
 
@@ -68,5 +74,24 @@ class Post extends Model
     public function score(): MorphOne
     {
         return $this->MorphOne(Score::class, 'scoreable');
+    }
+
+    public function scopeWithVotesByUser($query, $userId)
+    {
+        return $query->with(['votes' => function ($query) use ($userId) {
+            $query->where('user_id', $userId)->first();
+        }]);
+    }
+    public function scopeFilterByKeywords($query, $keywords)
+    {
+        $keywordsArray = explode(",", $keywords);
+        return $query->where(function ($query) use ($keywordsArray) {
+            foreach ($keywordsArray as $keyword) {
+                $query->where('title', 'LIKE', "%$keyword%")
+                    ->orWhereHas('tags', function ($query) use ($keyword) {
+                        $query->where('name', 'LIKE', "%$keyword%");
+                    });
+            }
+        });
     }
 }

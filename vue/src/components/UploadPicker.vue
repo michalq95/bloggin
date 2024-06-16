@@ -82,7 +82,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { getUploads, postUpload, deleteUpload } from "../service";
+import { getUploads, postUpload, deleteUpload } from "@/service";
 
 const emit = defineEmits(["selectUpload"]);
 const uploads = ref([]);

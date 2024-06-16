@@ -28,7 +28,7 @@ class CommentResource extends JsonResource
             'created_at' => $this->created_at->format('Y/m/d'),
             'updated_at' => $this->updated_at->format('Y/m/d'),
             'score' => $this->score ?  $this->score->score : 0,
-            'vote' => $this->votes
+            'vote' => new VoteResource($this->currentUserVote())
         ];
     }
 }

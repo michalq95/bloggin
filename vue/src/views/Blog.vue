@@ -4,7 +4,7 @@
     <div v-else class="max-w-5xl m-auto">
         <div class="flex justify-end">
             <button
-                v-if="$store.getters.getPermissions.includes('create post')"
+                v-if="store.getters.getPermissions.includes('create post')"
                 class="text-slate-100 bg-slate-700 p-2"
             >
                 <router-link :to="{ name: 'NewBlogpost' }">
@@ -34,75 +34,11 @@
             </button>
         </div>
         <div v-for="post in posts">
-            <div
-                class="px-10 py-6 bg-white rounded-lg shadow-md flex content-center"
-            >
-                <ScoreComponent
-                    :score="post.score"
-                    :id="post.id"
-                    :type="'post'"
-                />
-                <div class="grow">
-                    <router-link
-                        class="text-2xl text-gray-700 font-bold hover:underline"
-                        :to="{ name: 'BlogPost', params: { id: post.id } }"
-                        >{{ post.title }}</router-link
-                    >
-                    <div class="flex justify-between items-center">
-                        <ImageComponent
-                            v-if="post.image"
-                            :imageUrl="post.image.url"
-                            :width="96"
-                        ></ImageComponent>
-                        <span>
-                            <div class="font-light text-gray-600">
-                                {{ post.created_at }}
-                            </div>
-                            <div
-                                v-if="post.tags.length > 0"
-                                class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded"
-                            >
-                                <button
-                                    v-for="tag in post.tags"
-                                    :key="tag"
-                                    class="hover:bg-gray-500 mx-1 px-1"
-                                    @click="addTag(tag)"
-                                >
-                                    {{ tag }}
-                                </button>
-                            </div>
-                        </span>
-                    </div>
-
-                    <div class="mt-2 flex">
-                        <p class="text-gray-600" v-html="post.description"></p>
-                    </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <div>
-                            <router-link
-                                class="text-blue-500 hover:underline"
-                                :to="{
-                                    name: 'BlogPost',
-                                    params: { id: post.id },
-                                }"
-                                >Read more &rarr;
-                            </router-link>
-                            <div>{{ post.comments_count }} replies</div>
-                        </div>
-                        <router-link
-                            :to="{
-                                name: 'Profile',
-                                params: { id: post.user.id },
-                            }"
-                        >
-                            <Avatar
-                                :image="post.user.image?.url"
-                                :name="post.user.name"
-                            ></Avatar>
-                        </router-link>
-                    </div>
-                </div>
-            </div>
+            <BlogPostComponent
+                :post="post"
+                @elementVoted="elementVoted"
+                @addTag="addTag"
+            />
         </div>
         <v-pagination
             v-model="meta.current_page"
@@ -110,15 +46,16 @@
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
         ></v-pagination>
+        {{ posts[0] }}
     </div>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import ImageComponent from "../components/ImageComponent.vue";
-import ScoreComponent from "../components/ScoreComponent.vue";
-import Avatar from "../components/Avatar.vue";
-import { getPosts } from "../service";
-import store from "../store";
+import { ref, onMounted, watch, reactive } from "vue";
+import BlogPostComponent from "@/components/BlogPostComponent.vue";
+import { useStore } from "vuex";
+const store = useStore();
+
+import { getPosts } from "@/service";
 
 const posts = ref([]);
 const meta = ref({});
@@ -129,6 +66,12 @@ onMounted(async () => {
     posts.value = data.data;
     meta.value = data.meta;
 });
+function elementVoted(data) {
+    const post = posts.value.find((el) => el.id == data.scoreable_id);
+    post.score = data.score;
+    post.vote = reactive(post.vote || {});
+    post.vote.vote = data.value;
+}
 watch(
     () => meta.value.current_page,
     async (currentPage, old) => {
@@ -152,7 +95,6 @@ async function search() {
 }
 
 function addTag(tag) {
-    if (!keywords.value.split(" ").includes((el) => el == tag))
-        keywords.value += ` ${tag}`;
+    if (!keywords.value.split(" ").includes(tag)) keywords.value += ` ${tag}`;
 }
 </script>

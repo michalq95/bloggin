@@ -1,65 +1,68 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AuthLayout from "../components/AuthLayout.vue";
-import Login from "../views/Login.vue";
-import Blog from "../views/Blog.vue";
-import BlogPost from "../views/BlogPost.vue";
-import Register from "../views/Register.vue";
-import NewBlogPost from "../views/NewBlogPost.vue";
-import NotAuthorized from "../views/NotAuthorized.vue";
-import TipMe from "../views/TipMe.vue";
-import Thanks from "../views/Thanks.vue";
-import Home from "../views/Home.vue";
-import Profile from "../views/Profile.vue";
-import store from "../store";
+import Profile from "@/views/Profile.vue";
+import store from "@/store";
 
-import { getMyPermissions } from "../service";
+import { getMyPermissions } from "@/service";
 
 const routes = [
     {
         path: "/auth",
         name: "Auth",
         redirect: "/login",
-        component: AuthLayout,
+        component: () => import("@/components/AuthLayout.vue"),
         meta: { isGuest: true },
         children: [
-            { path: "/login", name: "Login", component: Login },
-            { path: "/register", name: "Register", component: Register },
+            {
+                path: "/login",
+                name: "Login",
+                component: () => import("@/views/Login.vue"),
+            },
+            {
+                path: "/register",
+                name: "Register",
+                component: () => import("@/views/Register.vue"),
+            },
         ],
     },
     {
         path: "/",
         name: "Home",
-        component: Home,
+        component: () => import("@/views/Home.vue"),
     },
     {
         path: "/blog",
         name: "Blog",
-        component: Blog,
+        component: () => import("@/views/Blog.vue"),
     },
     {
         path: "/blog/:id",
         name: "BlogPost",
-        component: BlogPost,
+        component: () => import("@/views/BlogPost.vue"),
     },
     {
         path: "/401",
         name: "NotAuthorized",
-        component: NotAuthorized,
+        component: () => import("@/views/NotAuthorized.vue"),
     },
     {
         path: "/tips",
         name: "TipMe",
-        component: TipMe,
+        component: () => import("@/views/TipMe.vue"),
     },
     {
         path: "/thanks",
         name: "Thanks",
-        component: Thanks,
+        component: () => import("@/views/Thanks.vue"),
+    },
+    {
+        path: "/image",
+        name: "Image",
+        component: () => import("@/views/RandomImage.vue"),
     },
     {
         path: "/newblogpost",
         name: "NewBlogpost",
-        component: NewBlogPost,
+        component: () => import("@/views/NewBlogPost.vue"),
         meta: { requiresAuth: true, requiresPermission: "create post" },
     },
     {

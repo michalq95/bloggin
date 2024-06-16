@@ -109,7 +109,7 @@
                             <img
                                 v-else
                                 class="mx-2 w-32 h-32 object-cover rounded-sm"
-                                src="../assets/placeholder.jpg"
+                                src="@/assets/placeholder.jpg"
                                 alt="placeholder_avatar"
                             />
                         </div>
@@ -244,8 +244,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { savePost, getTags } from "../service";
-import UploadPicker from "../components/UploadPicker.vue";
+import { savePost, getTags } from "@/service";
+import UploadPicker from "@/components/UploadPicker.vue";
 import { useRouter } from "vue-router";
 import Draggable from "vuedraggable";
 const router = useRouter();

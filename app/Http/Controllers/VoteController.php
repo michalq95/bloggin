@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class VoteController extends Controller
 {
 
-    public function store(VoteRequest $request)
+    public function __invoke(VoteRequest $request)
     {
         $score = $request->object['score'];
         if (!$score) {
@@ -27,10 +27,12 @@ class VoteController extends Controller
             $newScoreValue = -$vote['vote'] + $data['vote'];
             $vote->update($data);
         } else {
+
             $vote = Vote::create($data);
             $newScoreValue = $data['vote'];
         }
         $score->update(['score' => $oldScoreValue + $newScoreValue]);
+
         return new ScoreResource($score);
     }
 }

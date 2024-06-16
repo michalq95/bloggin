@@ -34,7 +34,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getDonations, initiateDonation } from "../service";
+import { getDonations, initiateDonation } from "@/service";
 
 const router = useRouter();
 

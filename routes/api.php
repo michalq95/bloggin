@@ -6,6 +6,7 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PremiumMembershipController;
+use App\Http\Controllers\RandomAnswerController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VoteController;
@@ -20,7 +21,7 @@ Route::resource('/tag', TagController::class)->only(['index']);
 Route::get('/upload/{uploads}', [UploadsController::class, 'show']);
 Route::get('/donation', [DonationController::class, 'index']);
 Route::post('/webhook', [DonationController::class, 'webhook']);
-
+Route::get('/random-image', RandomAnswerController::class);
 
 
 Route::middleware('guard')->group(function () {
@@ -41,7 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/post', PostController::class)->except(['index', 'show']);
 
     Route::post('/{model}/{id}/comment', [CommentController::class, 'store'])->middleware(BindCommentRoute::class);
-    Route::post('/{model}/{id}/vote', [VoteController::class, 'store'])->middleware(BindVotableRoute::class);
+    Route::post('/{model}/{id}/vote', VoteController::class)->middleware(BindVotableRoute::class);
     Route::resource('/comment', CommentController::class)->only(["show", "update", "destroy"]);
 
     Route::resource('/upload', UploadsController::class)->only(['store', 'index']);
